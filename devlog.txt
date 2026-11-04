@@ -1,1 +1,4 @@
-
+ivanC -- 2026-11-04 14:31 
+I'm going to be creating a new entry for this DevLog.
+It's pretty simple: I made the design document and set up the structure for the repository.
+I have yet to upload the team flag.
