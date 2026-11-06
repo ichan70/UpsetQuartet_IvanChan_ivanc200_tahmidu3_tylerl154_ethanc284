@@ -14,7 +14,7 @@ Ideas:
   -Note for users with no edits ("Feel free to contribute to any of these articles!")
   
 EthanC -- 2026-11-06 14:12
-Updated working doc:
-  -database/table usage
+Finished draft of working doc:
   -database organization
-
+  -task breakdown backups
+  -authentication/security
