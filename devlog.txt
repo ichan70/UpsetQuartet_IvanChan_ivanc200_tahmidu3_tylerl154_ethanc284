@@ -3,8 +3,18 @@ I'm going to be creating a new entry for this DevLog.
 It's pretty simple: I made the design document and set up the structure for the repository.
 I have yet to upload the team flag.
 
-ivanC -- 2026-11-05 14:10
-Nothing happened yesterday.
-The team flag has yet to be updated, but it's interesting how
-much work can be done in such a little time. design.pdf has been uploaded, but
-it's just a md file that's the template.
+EthanC -- 2026-11-05 14:45
+Updated working doc:
+  -scenario sigma 
+  -program components (description of all necessary HTML pages)
+    -removed create page
+  -database/table usage
+
+Ideas:
+  -Note for users with no edits ("Feel free to contribute to any of these articles!")
+  
+EthanC -- 2026-11-06 14:12
+Updated working doc:
+  -database/table usage
+  -database organization
+
