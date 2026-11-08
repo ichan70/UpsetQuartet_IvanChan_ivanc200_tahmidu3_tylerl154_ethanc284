@@ -18,3 +18,10 @@ Finished draft of working doc:
   -database organization
   -task breakdown backups
   -authentication/security
+
+EthanC -- 2026-11-07 22:59
+Finalized design doc:
+  -database organization
+  -security
+  -task breakdown
+  -component relationships
