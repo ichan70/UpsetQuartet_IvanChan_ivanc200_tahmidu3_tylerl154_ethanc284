@@ -25,3 +25,11 @@ Finalized design doc:
   -security
   -task breakdown
   -component relationships
+
+EthanC -- 2026-11-09 14:20
+Annotated 2 design docs
+Ideas from StarDestroyers:
+  -grouping steps on site map for clarity
+  -using foreign key in database
+Ideas from Spin The Wheel:
+  -Mockups of pages
