@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Login Page</title>
+  </head>
+
+  <h1>
+    Can you log in pwetty pwease? 🥺
+  </h1>
+
+
+  <body>
+      <form action="/auth" method="post">
+        <h4>username:</h4>
+        <input type="text" name="username" required> <!--required is a modifier that forces the user to populate that field, so ensuring no cases of js a username or js a password-->
+        <h4>password:</h4>
+        <input type="text" name="password" required>
+        <br><br>
+        <input type="submit" name="action" value="Login">
+        <input type="submit" name="action" value = "Register">
+
+      </form>
+    <body>
+</html>
