@@ -33,3 +33,6 @@ Ideas from StarDestroyers:
   -using foreign key in database
 Ideas from Spin The Wheel:
   -Mockups of pages
+
+IvanC -- 2026-11-10 01:28
+Added diagram for routing. Temporary diagram, will update later.
