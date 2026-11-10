@@ -36,3 +36,9 @@ Ideas from Spin The Wheel:
 
 IvanC -- 2026-11-10 01:28
 Added diagram for routing. Temporary diagram, will update later.
+
+EthanC -- 2026-11-10 14:32
+Started coding
+Created separate branches
+Created revised timeline
+Copied initial directory structure
