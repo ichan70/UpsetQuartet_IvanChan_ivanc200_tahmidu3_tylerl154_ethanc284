@@ -7,6 +7,12 @@
     <body>
       <h1>hai, {{ username }}!</h1>
       <h1>i'm weawwy weawwy gwad uwu'we hewe!!!! :3</h1>
+      <h2>Your Stories:</h2>
+      <ul>
+        {% for page in pages %}
+          <li><a href="/page/{{ page[1] }}">{{ page[1] }}</a></li>
+        {% endfor %}
+      </ul>
       <form action="/logout" method="get">
         <input type="submit" value="Logout">
       </form>
