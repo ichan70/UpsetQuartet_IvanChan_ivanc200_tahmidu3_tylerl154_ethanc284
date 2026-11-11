@@ -6,13 +6,15 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect, session
 import sqlite3
+import tables
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
 
 DB_FILE = "database.db"
-db = sqlite3.connect(DB_FILE)
+db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
 c = db.cursor()
+tables.setup()
 
 @app.route("/")
 def root():
@@ -26,8 +28,11 @@ def login():
         username = request.form.get("username", "").strip()
         password = request.form.get("password")
         #checks if passwords match by searching the database for the pair
-        c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password)) #(wowie i did some sanitisation)
-        user = c.fetchone()
+        try: #exceptions maybe fix it?
+            c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+            user = c.fetchone()
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
 
         if user:
             session['username'] = user[1] #makes a session for the user
@@ -47,12 +52,20 @@ def register():
         if password != otherPassword: #check for passwords matching
             return "Passwords do not match"
         #check if username already exists
-        c.execute("SELECT * FROM users WHERE username = ?", (username,))
-        if c.fetchone():
-            return "Username already taken"
+        try:
+            c.execute("SELECT * FROM users WHERE username = ?", (username,))
+            if c.fetchone():
+                return "Username already taken"
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+
         #adds to database
-        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-        db.commit()
+        try:
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            db.commit()
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+
         #makes session and redirects to profile
         session['username'] = username
         return redirect(url_for("user_profile", username=username))
@@ -65,14 +78,20 @@ def user_profile(username):
     if 'username' not in session or session['username'] != username:
         return redirect(url_for("login"))
 
-    c.execute("SELECT * FROM users WHERE username = ?", (username,))
-    user = c.fetchone()
+    try:
+        c.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
     if not user:
         return "User not found"
     #searches all stories where the user has created them
-    c.execute("SELECT * FROM pages WHERE creator_id = ?", (user[0],))
-    pages = c.fetchall()
+    try:
+        c.execute("SELECT * FROM pages WHERE creator_id = ?", (user[0],))
+        pages = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
     return render_template("response.html", username=username, pages=pages)
 
