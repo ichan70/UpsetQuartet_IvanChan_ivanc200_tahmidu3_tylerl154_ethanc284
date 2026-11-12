@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="The register page for the website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <title>Register Page</title>
+    </head>
+
+    <body>
+        <div class="title">
+            <h1>Create Your Account</h1>
+        </div>
+        <form action="/signup" method="post">
+            <h4>Username:</h4>
+            <input type="text" name="username" required>
+            <h4>Password:</h4>
+            <input type="password" name="password" required>
+            <h4>Input Password Again:</h4>
+            <input type="password" name="otherPassword" required>
+            <br> <br>
+            <input type="submit" value="Register">
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </body>
+</html>
