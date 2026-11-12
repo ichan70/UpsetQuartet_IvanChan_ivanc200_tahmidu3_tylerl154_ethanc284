@@ -102,10 +102,19 @@ def logout():
 
 @app.route("/edit")
 def edit():
+    '''
+    if no page exists, then it should be /edit, if appending to an existing page
+    it should be /edit/pagename.
+    If creating:
+    Have title be "Create a new story" with a title text box and a massive text box with a publish button (dummy entry that gets changed in db?) and a cancel button (deletes entry in db?).
+    If adding on:
+    Have the title be "Add onto this story", have preview of the entire story
+    and a text box at the bottom, with a publish button with a cancel button.
+    '''
 	if 'username' not in session or session['username'] != username:
 		return redirect(url_for("login"))
 	return render_template("edit.html")
-	
+
 @app.route("/index")
 def indexing():
 	if 'username' not in session or session['username'] != username:
