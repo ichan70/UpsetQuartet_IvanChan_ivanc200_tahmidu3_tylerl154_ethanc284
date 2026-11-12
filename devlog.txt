@@ -51,3 +51,8 @@ Fixed a bug with same thread for sqlite3
 IvanC -- 2026-11-11 11:48
 Took Tahmid's code and added on with extra pages implemented.
 Design document and requirements txt up-to-date and basic functionality achieved. 
+
+EthanC -- 2026-11-12 12:47
+Working Day
+Made progress on tables.py, page mockups, installations guide, serve.py, HTML skeletons
+Ideas: Make website accessible for different devices
