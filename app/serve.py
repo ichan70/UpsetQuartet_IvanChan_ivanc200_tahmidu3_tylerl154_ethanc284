@@ -100,6 +100,18 @@ def logout():
     session.pop('username', None)
     return redirect(url_for("login"))
 
+@app.route("/edit")
+def edit():
+	if 'username' not in session or session['username'] != username:
+		return redirect(url_for("login"))
+	return render_template("edit.html")
+	
+@app.route("/index")
+def indexing():
+	if 'username' not in session or session['username'] != username:
+		return redirect(url_for("login"))
+	return render_template("index.html")
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
