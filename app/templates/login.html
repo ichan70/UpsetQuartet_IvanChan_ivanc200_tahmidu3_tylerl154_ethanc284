@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Login Page</title>
-  </head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="The login page for the website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <title>Login Page</title>
+    </head>
 
-  <h1>
-    Can you log in pwetty pwease? 🥺
-  </h1>
-
-
-  <body>
-      <form action="/auth" method="post">
-        <h4>username:</h4>
-        <input type="text" name="username" required> <!--required is a modifier that forces the user to populate that field, so ensuring no cases of js a username or js a password-->
-        <h4>password:</h4>
-        <input type="text" name="password" required>
-        <br><br>
-        <input type="submit" name="action" value="Login">
-        <input type="submit" name="action" value = "Register">
-
-      </form>
     <body>
+        <div class="title">
+            <h1>Login Page</h1>
+        </div>
+        <form action="/login" method="post">
+            <h4>Username:</h4>
+            <input type="text" name="username" required>
+            <h4>Password:</h4>
+            <input type="password" name="password" required>
+            <br> <br>
+            <input type="submit" value="Login">
+        </form>
+        <p>Don't have an account? <a href="/signup">Register here</a></p>
+    </body>
 </html>

@@ -1,88 +1,116 @@
-"""
-    Sticks & Feathers
-    Tahmid Uddin, Charles Wu, Zhong Li Rui
-    Software Development
-    October 21, 2026
- """
+# The Upset Quartet
+# Sep 10, 2026
+# Project 00: Move Slowly and Fix Things
+# 2026-11-18
 
-from flask import Flask
-from flask import session
-from flask import render_template
-from flask import request
-from flask import redirect
-from flask import url_for
 import os
-import csv
+from flask import Flask, render_template, request, url_for, redirect, session
+import sqlite3
+import tables
 
-app=Flask(__name__)
-app.secret_key = "Ya-ha-ha! You found me!" #cookie encoding
-csvFile = os.path.join("data", "users.csv")
+app = Flask(__name__)
+app.secret_key = os.urandom(32)  # Generates a random secret key
 
-def get_users(): #retrieves username and password
-    users = {}
-    if os.path.exists(csvFile): #i made my own csv and for some reason it wasn't playing nice, stackoverflow said to js use path.exists instead
-        with open(csvFile, mode = "r", newline="") as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if len(row) >= 2: #jic there's only a username and no password for some reason
-                    users[row[0]] = row[1]
-    return users
-
-def saveUser(username, password): #adds user info to the csv file
-    if not os.path.exists("data"):
-        os.makedirs("data") #b/c csv is being stored in a data folder, this check is needed to make sure that hte directory exists
-    with open(csvFile, mode="a", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow([username, password])
+DB_FILE = "database.db"
+db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
+c = db.cursor()
+tables.setup()
 
 @app.route("/")
-def index(): #chekc if log in
-    if "username" in session:
-        return redirect(url_for("welcome"))
-    else:
-        return redirect(url_for("login"))
+def root():
+    if 'username' in session:
+        return redirect(url_for("user_profile", username=session['username']))
+    return redirect(url_for("login"))
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password")
+        #checks if passwords match by searching the database for the pair
+        try: #exceptions maybe fix it?
+            c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+            user = c.fetchone()
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+
+        if user:
+            session['username'] = user[1] #makes a session for the user
+            return redirect(url_for("user_profile", username=user[1])) #redirectts to profile
+        else:
+            return "Invalid username or password"
+
     return render_template("login.html")
 
-@app.route("/auth", methods=["POST"]) #forces post cuz it'd be redundant to write GET code if we aren't gonna use it
-def auth(): #checks if user alr exists, if passwords match, and if user is registering
-    username = request.form.get("username", "").strip()
-    password = request.form.get("password", "").strip()
-    action = request.form.get("action") #have the buttons interact with code
-    if not username or not password:
+@app.route("/signup", methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password")
+        otherPassword = request.form.get("otherPassword")
+
+        if password != otherPassword: #check for passwords matching
+            return "Passwords do not match"
+        #check if username already exists
+        try:
+            c.execute("SELECT * FROM users WHERE username = ?", (username,))
+            if c.fetchone():
+                return "Username already taken"
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+
+        #adds to database
+        try:
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            db.commit()
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+
+        #makes session and redirects to profile
+        session['username'] = username
+        return redirect(url_for("user_profile", username=username))
+
+    return render_template("register.html")
+
+@app.route("/user/<username>")
+def user_profile(username):
+    #check if no session exists for user or wrong session
+    if 'username' not in session or session['username'] != username:
         return redirect(url_for("login"))
 
-    users = get_users()
+    try:
+        c.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
-    if action == "Register": #check if username alr exists before registering
-        if username in users:
-            return redirect(url_for("login"))
-        saveUser(username, password)
-        session["username"] = username
-        return redirect(url_for("welcome"))
+    if not user:
+        return "User not found"
+    #searches all stories where the user has created them
+    try:
+        c.execute("SELECT * FROM pages WHERE creator_id = ?", (user[0],))
+        pages = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
-    elif action == "Login":
-        if username not in users: #no user exists
-            return redirect(url_for("login"))
-        if users[username] != password: #password mismatch
-            return redirect(url_for("login"))
-        session["username"] = username
-        return redirect(url_for("welcome"))
-    return redirect(url_for("login")) #general chekc if any other error thingies happen
-
-@app.route("/welcome")
-def welcome():
-    if "username" not in session:
-        return redirect(url_for("login"))
-    username = session.get("username")
-    return render_template("response.html", username=username)
+    return render_template("response.html", username=username, pages=pages)
 
 @app.route("/logout")
 def logout():
-    session.pop("username", None) #none is used as the default jic any edge case happens
-    return redirect(url_for('login'))
+    session.pop('username', None)
+    return redirect(url_for("login"))
+
+@app.route("/edit")
+def edit():
+	if 'username' not in session or session['username'] != username:
+		return redirect(url_for("login"))
+	return render_template("edit.html")
+	
+@app.route("/index")
+def indexing():
+	if 'username' not in session or session['username'] != username:
+		return redirect(url_for("login"))
+	return render_template("index.html")
 
 if __name__ == "__main__":
     app.debug = True

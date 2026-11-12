@@ -1,18 +1,18 @@
-ivanC -- 2026-11-04 14:31 
+ivanC -- 2026-11-04 14:31
 I'm going to be creating a new entry for this DevLog.
 It's pretty simple: I made the design document and set up the structure for the repository.
 I have yet to upload the team flag.
 
 EthanC -- 2026-11-05 14:45
 Updated working doc:
-  -scenario sigma 
+  -scenario sigma
   -program components (description of all necessary HTML pages)
     -removed create page
   -database/table usage
 
 Ideas:
   -Note for users with no edits ("Feel free to contribute to any of these articles!")
-  
+
 EthanC -- 2026-11-06 14:12
 Finished draft of working doc:
   -database organization
@@ -42,3 +42,12 @@ Started coding
 Created separate branches
 Created revised timeline
 Copied initial directory structure
+
+TahmidU -- 2026-11-10 21:08
+Took Ivan's code and made it interface with database (checking credentials/inserting credentials)
+Added links on login and register page to each other
+Fixed a bug with same thread for sqlite3
+
+IvanC -- 2026-11-11 11:48
+Took Tahmid's code and added on with extra pages implemented.
+Design document and requirements txt up-to-date and basic functionality achieved. 
