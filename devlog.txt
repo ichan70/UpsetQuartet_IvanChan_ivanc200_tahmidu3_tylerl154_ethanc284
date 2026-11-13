@@ -61,3 +61,8 @@ TahmidU -- 2026-11-12 22:45
 Added functionality to create stories
 Added functionality to view a story
 Fixed a bug where it'd pass in the title as the id number instead of the actual primary key
+
+IvanC -- 2026-11-12 23:07
+Added CSS to each file
+Made login and register pages similar to how Ethan planned on doing so
+Fixed README.md document to actually include installation guide
