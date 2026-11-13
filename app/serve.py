@@ -138,13 +138,13 @@ def edit():
         return redirect(url_for("user_profile", username=username))
     return render_template("edit.html", page=page, username=username)
 
-@app.route("/add_to_story/<int:page_id>", methods=['GET', 'POST'])
-def add_to_story(page_id):
+@app.route("/add_to_story/<int:id>", methods=['GET', 'POST'])
+def add_to_story(id):
     if 'username' not in session: #checks if user exists
         return redirect(url_for("login"))
     username = session['username']
     try: #fetches the page and runs a check to see if matches author
-        c.execute("SELECT * FROM pages WHERE id = ?", (page_id,))
+        c.execute("SELECT * FROM pages WHERE id = ?", (id,))
         page = c.fetchone()
     except sqlite3.Error as e:
         return f"Database error: {e}"
@@ -152,23 +152,23 @@ def add_to_story(page_id):
         return "Error 404: Page not found"
     if page[3] == username:  # Check if the current user is the author
         return "You cannot add to your own story."
-    try: #checks if user alr added onto the story
-        c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (page_id, page[3]))
-        contribution = c.fetchone()
-    except sqlite3.Error as e:
-        return f"Database error: {e}"
-    if contribution:
-        return "You have already added to this story."
+    #try: #checks if user alr added onto the story
+    #    c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (page_id, page[3]))
+    #    contribution = c.fetchone()
+    #except sqlite3.Error as e:
+    #    return f"Database error: {e}"
+    #if contribution:
+    #    return "You have already added to this story."
     if request.method == 'POST': #same thing but with post
         text = request.form.get("text", "").strip()
         try:
             c.execute("SELECT id FROM users WHERE username = ?", (username,))
             user_id = c.fetchone()[0]
-            c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (page_id, user_id, text, int(time.time())))
+            #c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (page_id, user_id, text, int(time.time())))
             db.commit()
         except sqlite3.Error as e:
             return f"Database error: {e}"
-        return redirect(url_for("view_page", id=page_id))
+        return redirect(url_for("view_page", id=id))
     return render_template("add_to_story.html", page=page, username=username)
 
 @app.route("/page/<int:id>") #lets you read the story
@@ -182,13 +182,13 @@ def view_page(id):
     if not page:
         return "Error 404: Page not found" #not rlly an error ik
 
-    try:
-        c.execute("SELECT * FROM contributions WHERE page_id = ?", (id,))
-        contributions = c.fetchall()
-    except sqlite3.Error as e:
-        return f"Database error: {e}"
+    #try:
+    #    c.execute("SELECT * FROM contributions WHERE id = ?", (id,))
+    #    contributions = c.fetchall()
+    #except sqlite3.Error as e:
+    #    return f"Database error: {e}"
 
-    return render_template("view_page.html", page=page, contributions=contributions)
+    return render_template("view_page.html", page=page)
 
 @app.route("/index")
 def indexing():
