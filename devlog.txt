@@ -66,3 +66,8 @@ IvanC -- 2026-11-12 23:07
 Added CSS to each file
 Made login and register pages similar to how Ethan planned on doing so
 Fixed README.md document to actually include installation guide
+
+EthanC -- 2026-11-13 24:50
+Another working day
+Edited CSS, etc.
+Tyler absent
