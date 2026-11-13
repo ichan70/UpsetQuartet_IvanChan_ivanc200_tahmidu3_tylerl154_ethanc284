@@ -10,25 +10,40 @@
         <title>Welcome Page</title>
     </head>
     <body>
-      <h1>hai, {{ username }}!</h1>
-      <h1>i'm weawwy weawwy gwad uwu'we hewe!!!! :3 xoxo</h1>
-      <h2>Your Stories:</h2>
-      <ul>
-        {% for page in pages %}
-          <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
-        {% endfor %}
-      </ul>
-      <h2>Stories You Can Add To:</h2>
-      <ul>
-        {% for page in pages %}
-          {% if page[3] != username %}
-            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-      <a href="/edit"><button>Create New Story</button></a>
-      <form action="/logout" method="get">
-        <input type="submit" value="Logout">
-      </form>
+        <div class="flexBox">
+            <div class="title">
+                <h1>{{ username }}'s Profile</h1>
+            </div>
+            <form action="/logout" method="get">
+                <input type="submit" class="submit" value="Logout">
+            </form>
+        </div>
+        <div class="subtitle">        
+            <h1>i'm weawwy weawwy gwad uwu'we hewe!!!! :3 xoxo</h1>
+        </div>
+        <div class="stories">
+            <div class="story-left">        
+                <h2><u>Your Stories</u></h2>
+                <h3>Stories you've contributed to already</h3>
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="story-right">
+                <h2><u>Suggested Contributions</u></h2>
+                <h3>Stories you might enjoy</h3>
+                <ul>
+                    {% for page in pages %}
+                        {% if page[3] != username %}
+                            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <a href="/index"><button class="submit">View All Stories</button></a>
+        <a href="/edit"><button class="submit">Create New Story</button></a>
     </body>
 </html>

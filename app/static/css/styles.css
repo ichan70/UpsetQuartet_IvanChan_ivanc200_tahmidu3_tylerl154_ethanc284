@@ -28,6 +28,16 @@ p, h1, h2, h3, h4, a {
 	text-align: center
 }
 
+.subtitle {
+    display: flex;
+	justify-content: center;
+	font-family: 'Inconsolata';
+	font-size: 18px;
+    font-style: italic;
+    margin-top: -45px;
+	text-align: center
+}
+
 .form {
 	display: flex;
 	justify-content: center;
@@ -47,6 +57,7 @@ p, h1, h2, h3, h4, a {
     background-color: #CFE2F3;
     border: 0px;
     padding: 13px 42px;
+    margin: 45px;
     font-style: italic;
     border-radius: 5px;
 }
@@ -55,6 +66,17 @@ p, h1, h2, h3, h4, a {
     background-color: #D1E4FF;
     box-shadow: 0 8px 16px rgba(0, 0, 30, 0.4);
     padding: 15px 43px;
+}
+
+.flexBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexBox h1 {
+    margin-right: 80px;
 }
 
 .redirect {
@@ -67,4 +89,38 @@ p, h1, h2, h3, h4, a {
 
 .redirect a {
 	font-style: normal;
+}
+
+.stories {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20%;
+    font-family: 'Inconsolata';
+}
+
+.stories h2 {
+    font-size: 30px;
+}
+
+.stories h3 {
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.story-left {
+    text-align: center;
+}
+
+.story-left a {
+    text-decoration: none;
+}
+
+.story-right {
+    text-align: center;
+}
+
+.story-right a {
+    text-decoration: none;
 }
