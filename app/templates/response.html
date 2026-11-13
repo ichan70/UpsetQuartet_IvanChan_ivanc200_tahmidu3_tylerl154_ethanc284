@@ -2,6 +2,11 @@
 
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="The welcome page for the website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>Welcome Page</title>
     </head>
     <body>
@@ -10,9 +15,18 @@
       <h2>Your Stories:</h2>
       <ul>
         {% for page in pages %}
-          <li><a href="/page/{{ page[1] }}">{{ page[1] }}</a></li>
+          <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
         {% endfor %}
       </ul>
+      <h2>Stories You Can Add To:</h2>
+      <ul>
+        {% for page in pages %}
+          {% if page[3] != username %}
+            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <a href="/edit"><button>Create New Story</button></a>
       <form action="/logout" method="get">
         <input type="submit" value="Logout">
       </form>

@@ -7,6 +7,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect, session
 import sqlite3
 import tables
+import time
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
@@ -72,7 +73,7 @@ def register():
 
     return render_template("register.html")
 
-@app.route("/user/<username>")
+@app.route("/user/<username>") #new function for viewing the stories
 def user_profile(username):
     #check if no session exists for user or wrong session
     if 'username' not in session or session['username'] != username:
@@ -100,15 +101,98 @@ def logout():
     session.pop('username', None)
     return redirect(url_for("login"))
 
-@app.route("/edit")
+@app.route("/edit", methods=['GET', 'POST']) #i rmbr tyler saying something abt not doing post so i js did both
 def edit():
-	if 'username' not in session or session['username'] != username:
-		return redirect(url_for("login"))
-	return render_template("edit.html")
-	
+    if 'username' not in session: #check to make sure it's an existing username
+        return redirect(url_for("login"))
+    username = session['username']
+    page_id = request.args.get('id') #grabs page id from edit.html template
+    if page_id:
+        try:
+            c.execute("SELECT * FROM pages WHERE id = ?", (page_id,)) #grabs page_id from the database
+            page = c.fetchone()
+        except sqlite3.Error as e: #exception jic sqlite3 throws an error
+            return f"Database error: {e}"
+        if not page:
+            return "Error 404: Page not found" #simple jic page doesn't exist
+    else:
+        page = None
+    if request.method == 'POST': #same thing but if its post
+        title = request.form.get("title", "").strip()
+        text = request.form.get("text", "").strip()
+        page_id = request.form.get("id", "").strip()
+        if page_id:
+            try:
+                c.execute("UPDATE pages SET text = ? WHERE id = ?", (text, page_id)) #code for adding content
+                db.commit()
+            except sqlite3.Error as e:
+                return f"Database error: {e}"
+        else:
+            try:
+                c.execute("SELECT id FROM users WHERE username = ?", (username,))
+                user_id = c.fetchone()[0] #code for creating content
+                c.execute("INSERT INTO pages (title, text, creator_id, created_at) VALUES (?, ?, ?, ?)", (title, text, user_id, int(time.time())))
+                db.commit()
+            except sqlite3.Error as e:
+                return f"Database error: {e}" #jic sqlite3 gets fussy
+        return redirect(url_for("user_profile", username=username))
+    return render_template("edit.html", page=page, username=username)
+
+@app.route("/add_to_story/<int:page_id>", methods=['GET', 'POST'])
+def add_to_story(page_id):
+    if 'username' not in session: #checks if user exists
+        return redirect(url_for("login"))
+    username = session['username']
+    try: #fetches the page and runs a check to see if matches author
+        c.execute("SELECT * FROM pages WHERE id = ?", (page_id,))
+        page = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+    if not page:
+        return "Error 404: Page not found"
+    if page[3] == username:  # Check if the current user is the author
+        return "You cannot add to your own story."
+    try: #checks if user alr added onto the story
+        c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (page_id, page[3]))
+        contribution = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+    if contribution:
+        return "You have already added to this story."
+    if request.method == 'POST': #same thing but with post
+        text = request.form.get("text", "").strip()
+        try:
+            c.execute("SELECT id FROM users WHERE username = ?", (username,))
+            user_id = c.fetchone()[0]
+            c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (page_id, user_id, text, int(time.time())))
+            db.commit()
+        except sqlite3.Error as e:
+            return f"Database error: {e}"
+        return redirect(url_for("view_page", id=page_id))
+    return render_template("add_to_story.html", page=page, username=username)
+
+@app.route("/page/<int:id>") #lets you read the story
+def view_page(id):
+    try:
+        c.execute("SELECT * FROM pages WHERE id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
+        page = c.fetchone()
+        print(id)  # Ensure this prints the integer id
+    except sqlite3.Error as e:
+        return f"Database error: {e}" #jic sqlite3 gets fussy
+    if not page:
+        return "Error 404: Page not found" #not rlly an error ik
+
+    try:
+        c.execute("SELECT * FROM contributions WHERE page_id = ?", (id,))
+        contributions = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+
+    return render_template("view_page.html", page=page, contributions=contributions)
+
 @app.route("/index")
 def indexing():
-	if 'username' not in session or session['username'] != username:
+	if 'username' not in session:
 		return redirect(url_for("login"))
 	return render_template("index.html")
 
