@@ -7,6 +7,7 @@ import os
 from flask import Flask, render_template, request, url_for, redirect, session
 import sqlite3
 import tables
+import time
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
@@ -100,24 +101,46 @@ def logout():
     session.pop('username', None)
     return redirect(url_for("login"))
 
-@app.route("/edit")
+@app.route("/edit", methods=['GET', 'POST']) #i rmbr tyler saying something abt not doing post so i js did both
 def edit():
-    '''
-    if no page exists, then it should be /edit, if appending to an existing page
-    it should be /edit/pagename.
-    If creating:
-    Have title be "Create a new story" with a title text box and a massive text box with a publish button (dummy entry that gets changed in db?) and a cancel button (deletes entry in db?).
-    If adding on:
-    Have the title be "Add onto this story", have preview of the entire story
-    and a text box at the bottom, with a publish button with a cancel button.
-    '''
-	if 'username' not in session or session['username'] != username:
-		return redirect(url_for("login"))
-	return render_template("edit.html")
+    if 'username' not in session: #check to make sure it's an existing username
+        return redirect(url_for("login"))
+    username = session['username']
+    page_id = request.args.get('page_id') #grabs page id from edit.html template
+    if page_id:
+        try:
+            c.execute("SELECT * FROM pages WHERE id = ?", (page_id,)) #grabs page_id from the database
+            page = c.fetchone()
+        except sqlite3.Error as e: #exception jic sqlite3 throws an error
+            return f"Database error: {e}"
+        if not page:
+            return "Error 404: Page not found" #simple jic page doesn't exist
+    else:
+        page = None
+    if request.method == 'POST': #same thing but if its post
+        title = request.form.get("title", "").strip()
+        text = request.form.get("text", "").strip()
+        page_id = request.form.get("page_id", "").strip()
+        if page_id:
+            try:
+                c.execute("UPDATE pages SET text = ? WHERE id = ?", (text, page_id)) #code for adding content
+                db.commit()
+            except sqlite3.Error as e:
+                return f"Database error: {e}"
+        else:
+            try:
+                c.execute("SELECT id FROM users WHERE username = ?", (username,))
+                user_id = c.fetchone()[0] #code for creating content
+                c.execute("INSERT INTO pages (title, text, creator_id, created_at) VALUES (?, ?, ?, ?)", (title, text, user_id, int(time.time())))
+                db.commit()
+            except sqlite3.Error as e:
+                return f"Database error: {e}" #jic sqlite3 gets fussy
+        return redirect(url_for("user_profile", username=username))
+    return render_template("edit.html", page=page, username=username)
 
 @app.route("/index")
 def indexing():
-	if 'username' not in session or session['username'] != username:
+	if 'username' not in session:
 		return redirect(url_for("login"))
 	return render_template("index.html")
 
