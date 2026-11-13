@@ -15,9 +15,10 @@
       <h2>Your Stories:</h2>
       <ul>
         {% for page in pages %}
-          <li><a href="/page/{{ page[1] }}">{{ page[1] }}</a></li>
+          <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
         {% endfor %}
       </ul>
+      <a href="/edit"><button>Create New Story</button></a>
       <form action="/logout" method="get">
         <input type="submit" value="Logout">
       </form>
