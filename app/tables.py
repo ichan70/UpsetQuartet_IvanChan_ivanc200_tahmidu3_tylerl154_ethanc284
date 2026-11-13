@@ -8,5 +8,5 @@ def setup():
     c.execute("CREATE TABLE IF NOT EXISTS pages (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, text TEXT, creator_id INTEGER, created_at INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS page_history (edit_id INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, last_editor_id INTEGER, last_update INTEGER, text TEXT)")
     #work in progress pls don't touch- tahmid
-    c.execute("CREATE TABLE IF NOT EXISTS contributions (page_id INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (author) REFERENCES pages(creator_id), password TEXT)")
+    #c.execute("CREATE TABLE IF NOT EXISTS contributions (page_id INTEGER PRIMARY KEY AUTOINCREMENT, FOREIGN KEY (author) REFERENCES pages(creator_id), password TEXT)")
     db.commit()
