@@ -18,6 +18,14 @@
           <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
         {% endfor %}
       </ul>
+      <h2>Stories You Can Add To:</h2>
+      <ul>
+        {% for page in pages %}
+          {% if page[3] != username %}
+            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
       <a href="/edit"><button>Create New Story</button></a>
       <form action="/logout" method="get">
         <input type="submit" value="Logout">
