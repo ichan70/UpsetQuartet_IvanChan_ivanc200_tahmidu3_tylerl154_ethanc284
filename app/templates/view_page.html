@@ -2,7 +2,12 @@
 
 <html>
     <head>
-        <title>View Story</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="The view page for the website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <title>View Page</title>
     </head>
     <body>
         <h1>{{ page[1] }}</h1>
