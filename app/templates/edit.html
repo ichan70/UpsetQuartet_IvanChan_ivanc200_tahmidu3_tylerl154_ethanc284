@@ -6,8 +6,8 @@
     </head>
     <body>
         {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
-            <h4>Add onto this story: {{ page.title }}</h4>
-            <p>{{ page.text }}</p>
+            <h4>Add onto this story: {{ page[1] }}</h4>
+            <p>{{ page[2] }}</p>
         {% else %}
             <h4>Create a new story</h4>
         {% endif %}
@@ -18,7 +18,7 @@
             {% endif %}
             <h4>Text:</h4>
             <textarea name="text" required></textarea> <!-- text box for content, textarea is bigger than the one for title -->
-            <input type="hidden" name="page_id" value="{{ page.id if page else '' }}"> <!-- i made it hidden from the user but this create a page id or make it null -->
+            <input type="hidden" name="id" value="{{ page[0] if page else '' }}"> <!-- i made it hidden from the user but this create a page id or make it null -->
             <br> <br>
             <input type="submit" value="Publish">
             <a href="/user/{{ username }}">Cancel</a> <!-- i js added a link that brought back to profile page cuz i think its easier than deleting a dummy entry -->

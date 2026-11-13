@@ -10,7 +10,7 @@
       <h2>Your Stories:</h2>
       <ul>
         {% for page in pages %}
-          <li><a href="/page/{{ page[1] }}">{{ page[1] }}</a></li>
+          <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
         {% endfor %}
       </ul>
       <form action="/logout" method="get">

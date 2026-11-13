@@ -73,7 +73,7 @@ def register():
 
     return render_template("register.html")
 
-@app.route("/user/<username>")
+@app.route("/user/<username>") #new function for viewing the stories
 def user_profile(username):
     #check if no session exists for user or wrong session
     if 'username' not in session or session['username'] != username:
@@ -106,7 +106,7 @@ def edit():
     if 'username' not in session: #check to make sure it's an existing username
         return redirect(url_for("login"))
     username = session['username']
-    page_id = request.args.get('page_id') #grabs page id from edit.html template
+    page_id = request.args.get('id') #grabs page id from edit.html template
     if page_id:
         try:
             c.execute("SELECT * FROM pages WHERE id = ?", (page_id,)) #grabs page_id from the database
@@ -120,7 +120,7 @@ def edit():
     if request.method == 'POST': #same thing but if its post
         title = request.form.get("title", "").strip()
         text = request.form.get("text", "").strip()
-        page_id = request.form.get("page_id", "").strip()
+        page_id = request.form.get("id", "").strip()
         if page_id:
             try:
                 c.execute("UPDATE pages SET text = ? WHERE id = ?", (text, page_id)) #code for adding content
@@ -137,6 +137,18 @@ def edit():
                 return f"Database error: {e}" #jic sqlite3 gets fussy
         return redirect(url_for("user_profile", username=username))
     return render_template("edit.html", page=page, username=username)
+
+@app.route("/page/<int:id>") #lets you read the story
+def view_page(id):
+    try:
+        c.execute("SELECT * FROM pages WHERE id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
+        page = c.fetchone()
+        print(id)  # Ensure this prints the integer id
+    except sqlite3.Error as e:
+        return f"Database error: {e}" #jic sqlite3 gets fussy
+    if not page:
+        return "Error 404: Page not found" #not rlly an error ik
+    return render_template("view_page.html", page=page)
 
 @app.route("/index")
 def indexing():
