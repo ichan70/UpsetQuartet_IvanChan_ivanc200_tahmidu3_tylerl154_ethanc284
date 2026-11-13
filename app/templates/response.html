@@ -21,8 +21,10 @@
       <h2>Stories You Can Add To:</h2>
       <ul>
         {% for page in pages %}
-          {% if page[3] != username %}
+          {% if page[3] != username[0] %}
             <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
+            {% else %}
+              <li>continue</li>
           {% endif %}
         {% endfor %}
       </ul>
