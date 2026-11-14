@@ -20,12 +20,13 @@
         <div class="stories-container">
           <div class="stories">
               <div class="story-left">
-                  <h2 >Your Stories: </h2>
+                  <h2>Your Stories: </h2>
                   <h3 style="text-decoration: underline;">Stories you've created</h3>
                   <ul> <!-- shows only 4 latest entries --> <!-- loop.cycle is used for the alternating colours -->
                       {% for page in pages[:4] %}
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
+                        <span class="story-date">by {{ page[3] }}</span>
                         <span class="story-date">Created on: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
@@ -37,7 +38,8 @@
                       {% for page in contributed_pages[:4] %}
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
-                        <span class="story-date">Contributed on: {{ page[4] | format_time }}</span>
+                        <span class="story-date">by {{ page[3] }}</span>
+                        <span class="story-date">Contributed on: {{ page[4] | format_time }}</span> <!-- shows what time user contributed -->
                       </li>
                       {% else %}
                           <li style="list-style-type: none;">No contributions yet, try adding to a story!</li>
@@ -51,6 +53,7 @@
                       {% for page in other_pages[:4] %} <!-- shows only 4 randomized entries -->
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/add_to_story/{{ page[0] }}">{{ page[1] }}</a>
+                        <span class="story-date">by {{ page[3] }}</span>
                         <span class="story-date">Last Added: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
