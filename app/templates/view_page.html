@@ -12,25 +12,24 @@
     <body>
         <div class="flexBox">
             <div class="title">
-                <h1>{{ page[1] }}</h1>
+                <h2>{{ page[1] }}</h2>
             </div>
             <form action="/logout" method="get">
-                <input type="submit" class="submit" value="Logout">
+                <input type="submit" class="submit submit-blue style=" style="font-size:20px;" value="Logout">
             </form>
         </div>
         <div class="story-content">
-            <h2>Story Content</h2>
             <p>{{ page[2] }}</p>
         </div>
         <div class="contributions">
-            <h2>Contributions</h2>
+            <h3>Contributions:</h3>
             <ul>
                 {% for contribution in contributions %}
                     <li><strong>{{ contribution[3] }}</strong>: - Added on: {{ contribution[4] | format_time }}</li>
                 {% endfor %}
             </ul>
         </div>
-        <a href="/add_to_story/{{ page[0] }}"><button class="submit">Add to Story</button></a>
-        <a href="/user/{{ session['username'] }}"><button class="submit">Back to Profile</button></a>
+        <a href="/add_to_story/{{ page[0] }}"><button class="submit submit-blue" style="font-size:20px;">Add to Story</button></a>
+        <a href="/user/{{ session['username'] }}"><button class="submit submit-grey" style="font-size:20px;">Back to Profile</button></a>
     </body>
 </html>
