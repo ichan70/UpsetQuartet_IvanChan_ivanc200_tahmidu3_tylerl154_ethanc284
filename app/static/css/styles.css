@@ -294,3 +294,12 @@ p, h1, h2, h3, h4, a {
     background-color: #D1E4FF;
     box-shadow: 0 4px 12px rgba(0, 0, 30, 0.35);
 }
+
+.btn-large {
+    width: auto;
+    min-width: 200px;
+    height: auto;
+    padding: 12px 24px;
+    font-size: 20px;
+    box-sizing: border-box;
+}

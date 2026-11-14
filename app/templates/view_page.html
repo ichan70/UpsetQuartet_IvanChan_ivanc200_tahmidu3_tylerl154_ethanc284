@@ -21,8 +21,9 @@
                     <li><strong>{{ contribution[3] }}</strong> by {{ contribution[2] }} - Added on: {{ contribution[4] | format_time }}</li>
                 {% endfor %}
             </ul>
-            <a href="/add_to_story/{{ page[0] }}"><button class="btn-publish" style="font-size:20px;">Add to Story</button></a>
-            <a href="/user/{{ session['username'] }}"><button class="btn-cancel" style="font-size:20px;">Back to Profile</button></a>
+            <div class="edit-buttons" style="margin-top: 30px;">
+              <a href="/user/{{ session['username'] }}"><button class="btn-cancel btn-large" style="font-size:20px;">Back to Profile</button></a>
+              <a href="/add_to_story/{{ page[0] }}"><button class="btn-publish btn-large" style="font-size:20px;">Add to Story</button></a>
         </div>
     </body>
 </html>
