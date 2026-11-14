@@ -27,7 +27,7 @@
                 <h3>Stories you've contributed to already</h3>
                 <ul>
                     {% for page in pages %}
-                        <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a></li>
+                        <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a> - Created at: {{ page[4] | format_time }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -37,7 +37,7 @@
                 <ul>
                     {% for page in pages %}
                         {% if page[3] != username %}
-                            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a></li>
+                            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a> - Created at: {{ page[4] | format_time }}</li>
                         {% endif %}
                     {% endfor %}
                 </ul>

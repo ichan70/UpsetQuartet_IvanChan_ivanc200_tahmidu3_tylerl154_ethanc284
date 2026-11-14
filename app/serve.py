@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, url_for, redirect, session
 import sqlite3
 import tables
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
@@ -16,6 +17,12 @@ DB_FILE = "database.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
 c = db.cursor()
 tables.setup()
+
+def format_time(timestamp):
+    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+# Register the format_time function as a template filter
+app.jinja_env.filters['format_time'] = format_time
 
 @app.route("/")
 def root():
