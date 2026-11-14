@@ -35,10 +35,8 @@
                 <h2><u>Suggested Contributions</u></h2>
                 <h3>Stories you might enjoy</h3>
                 <ul>
-                    {% for page in pages %}
-                        {% if page[3] != username %}
-                            <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a> - Created at: {{ page[4] | format_time }}</li>
-                        {% endif %}
+                    {% for page in other_pages %}
+                        <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a> - Created at: {{ page[4] | format_time }}</li>
                     {% endfor %}
                 </ul>
             </div>

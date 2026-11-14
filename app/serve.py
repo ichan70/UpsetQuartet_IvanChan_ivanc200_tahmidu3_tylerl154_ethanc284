@@ -105,7 +105,14 @@ def user_profile(username):
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
-    return render_template("response.html", username=username, pages=pages)
+    # Fetch stories that the user has not created
+    try:
+        c.execute("SELECT * FROM pages WHERE creator_id != ?", (user[0],))
+        other_pages = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+
+    return render_template("response.html", username=username, pages=pages, other_pages=other_pages)
 
 @app.route("/logout")
 def logout():
