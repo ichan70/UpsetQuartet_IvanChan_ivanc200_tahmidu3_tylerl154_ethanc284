@@ -71,3 +71,10 @@ EthanC -- 2026-11-13 24:50
 Another working day
 Edited CSS, etc.
 Tyler absent
+
+TahmidU -- 2026-11-13 23:48
+(Summing up for entire day)
+Added functionality for users to append onto stories
+Fixed a bunch of bugs
+Added a method that turnt time into a human readable format
+Adds a new datatable to keep track of contributions
