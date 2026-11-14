@@ -5,27 +5,29 @@
         <meta charset="UTF-8">
         <meta name="description" content="The edit page for the website.">
         <meta name="author" content="The Upset Quartet">
-        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>Edit Page</title>
     </head>
     <body>
-      {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
-            <h4>Add onto this story: {{ page[1] }}</h4>
-            <p>{{ page[2] }}</p>
+      <div class="edit-container">
+        {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
+              <h1 class = "edit-heading">Add onto this story: {{ page[1] }}</h1>
+              <p class = "existing-story">{{ page[2] }}</p>
         {% else %}
-            <h4>Create a new story</h4>
+          <h1 class = "edit-heading">Create A New Story</h1>
         {% endif %}
-        <form action="/edit" method="post">
-            {% if not page %}
-                <h4>Title:</h4>
-                <input type="text" name="title" required>
-            {% endif %}
-            <h4>Text:</h4>
-            <textarea name="text" required></textarea> <!-- text box for content, textarea is bigger than the one for title -->
-            <input type="hidden" name="id" value="{{ page[0] if page else '' }}"> <!-- i made it hidden from the user but this create a page id or make it null -->
-            <br> <br>
-            <input type="submit" value="Publish">
-            <a href="/user/{{ username }}">Cancel</a>
+        <form action="/edit" method="post" class="edit-form">
+          {% if not page %}
+            <input type="text" name="title" class="edit-input" placeholder="Enter Title" required>
+          {% endif %}
+          <textarea name="text" class="edit-textarea" placeholder="Enter Story" required></textarea> <!-- text box for content, textarea is bigger than the one for title -->
+          <input type="hidden" name="id" value="{{ page[0] if page else '' }}"> <!-- i made it hidden from the user but this create a page id or make it null -->
+          <div class="edit-buttons">
+            <a href="/user/{{ username }}" class="btn-cancel">Cancel</a>
+            <input type="submit" value="Publish" class="btn-publish">
+          </div>
+        </form>
+      </div>
     </body>
 </html>
