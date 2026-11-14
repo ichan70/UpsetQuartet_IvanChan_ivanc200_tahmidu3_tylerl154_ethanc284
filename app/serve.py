@@ -232,9 +232,35 @@ def view_page(id):
 
 @app.route("/index")
 def indexing():
+	# pagination help from online
 	if 'username' not in session:
 		return redirect(url_for("login"))
-	return render_template("index.html")
+	username = session['username']
+	search = request.args.get('query', '').strip()
+	try:
+		page = int(request.args.get('page', 1))
+		if page < 1:
+			page = 1
+	except sqlite3.Error as e:
+		page = 1
+	per_page = 20
+	current = (page - 1) * per_page
+	try:
+		if search: # grabs pages that matches query
+			like_query = f"%{search}%"
+			c.execute("SELECT COUNT(*) FROM pages WHERE title LIKE ?", (like_query,))
+			total_count = c.fetchone()[0]
+			c.execute("""SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.title LIKE ? ORDER BY p.created_at DESC LIMIT ? OFFSET ?""", (like_query, per_page, current))
+			pages = c.fetchall()
+		else: #gets every page
+			c.execute("SELECT COUNT(*) FROM pages")
+			total_count = c.fetchone()[0]
+			c.execute("""SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?""", (per_page, current))
+			pages = c.fetchall()
+	except sqlite3.Error as e:
+		return f"Database error: {e}"
+	total_pages = (total_count + per_page - 1) // per_page
+	return render_template("index.html", username=username, pages=pages, search=search, current_page=page, total_pages=total_pages)
 
 if __name__ == "__main__":
     app.debug = True

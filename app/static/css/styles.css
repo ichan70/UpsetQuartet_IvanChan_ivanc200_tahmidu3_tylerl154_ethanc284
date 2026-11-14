@@ -93,6 +93,10 @@ p, h1, h2, h3, h4, a {
     box-shadow: 0 8px 16px rgba(0, 0, 30, 0.4);
 }
 
+#small {
+	margin-top: -15px;
+}
+
 .flexBox {
     display: flex;
     flex-direction: row;
@@ -102,6 +106,15 @@ p, h1, h2, h3, h4, a {
 
 .flexBox h1 {
     margin-right: 80px;
+}
+
+.flexBox2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Inconsolata';
 }
 
 .redirect {
@@ -116,7 +129,7 @@ p, h1, h2, h3, h4, a {
 	font-style: normal;
 }
 
-.stories-container {
+.container {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -124,12 +137,24 @@ p, h1, h2, h3, h4, a {
     box-sizing: border-box;
 }
 
+.container #text {
+	width: 450px;
+	max-width: 40vw;
+	height: 35px;
+	padding-left: 5px;
+	font-size: 18px;
+}
+
 .stories {
     display: flex;
     gap: 40px;
-    width: 100%;
-    max-width: 1000px;
     justify-content: center;
+    font-family: 'Inconsolata';
+    color: white;
+}
+
+#stories-column {
+	flex-direction: column;
 }
 
 .story-left,
