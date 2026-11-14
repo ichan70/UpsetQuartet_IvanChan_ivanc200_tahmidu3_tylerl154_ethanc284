@@ -20,22 +20,33 @@
         <div class="stories-container">
           <div class="stories">
               <div class="story-left">
-                  <h2>Your Stories</h2>
-                  <h3>Stories you've contributed to already</h3>
+                  <h2 >Your Stories: </h2>
+                  <h3 style="text-decoration: underline;">Stories you've created</h3>
                   <ul> <!-- shows only 4 latest entries --> <!-- loop.cycle is used for the alternating colours -->
                       {% for page in pages[:4] %}
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
-                        <span class="story-date">Created at: {{ page[4] | format_time }}</span>
+                        <span class="story-date">Created on: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
                           <li style="list-style-type: none;">No stories yet, try creating or adding onto a story!</li>
                       {% endfor %}
                   </ul>
+                  <h3 style="text-decoration: underline;">Stories you've contributed to</h3>
+                  <ul> <!-- shows only 4 latest entries --> <!-- loop.cycle is used for the alternating colours -->
+                      {% for page in contributed_pages[:4] %}
+                      <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
+                        <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
+                        <span class="story-date">Contributed on: {{ page[4] | format_time }}</span>
+                      </li>
+                      {% else %}
+                          <li style="list-style-type: none;">No contributions yet, try adding to a story!</li>
+                      {% endfor %}
+                  </ul>
               </div>
               <div class="story-right">
-                  <h2>Suggested Contributions</h2>
-                  <h3>Stories you might enjoy</h3>
+                  <h2>Suggested Contributions: </h2>
+                  <h3 style="text-decoration: underline;">Stories you might enjoy</h3>
                   <ul>
                       {% for page in other_pages[:4] %} <!-- shows only 4 randomized entries -->
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">

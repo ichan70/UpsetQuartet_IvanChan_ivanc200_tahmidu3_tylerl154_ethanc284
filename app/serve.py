@@ -106,16 +106,23 @@ def user_profile(username):
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
-    # Fetch stories that the user has not created
+    # Fetch stories where the user has contributed
     try:
-        c.execute("SELECT * FROM pages WHERE creator_id != ?", (user[0],))
+        c.execute("SELECT DISTINCT p.* FROM pages p JOIN contributions c ON p.id = c.page_id WHERE c.contributor_id = ?", (user[0],))
+        contributed_pages = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+
+    # Fetch stories that the user has not created or contributed to
+    try:
+        c.execute("SELECT * FROM pages WHERE creator_id != ? AND id NOT IN (SELECT page_id FROM contributions WHERE contributor_id = ?)", (user[0], user[0]))
         other_pages = c.fetchall()
         # Shuffle the list to randomize the order
         random.shuffle(other_pages)
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
-    return render_template("response.html", username=username, pages=pages, other_pages=other_pages)
+    return render_template("response.html", username=username, pages=pages, contributed_pages=contributed_pages, other_pages=other_pages)
 
 @app.route("/logout")
 def logout():
@@ -191,7 +198,18 @@ def add_to_story(id):
         except sqlite3.Error as e:
             return f"Database error: {e}"
         return redirect(url_for("view_page", id=id))
-    return render_template("add_to_story.html", page=page, username=username)
+    
+    # Fetch the last contribution to the story
+    try:
+        c.execute("SELECT * FROM contributions WHERE page_id = ? ORDER BY added_at DESC LIMIT 1", (id,))
+        last_contribution = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+    
+    if last_contribution:
+        return render_template("add_to_story.html", page=page, last_contribution=last_contribution, username=username)
+    else:
+        return render_template("add_to_story.html", page=page, username=username)
 
 @app.route("/page/<int:id>") #lets you read the story
 def view_page(id):
