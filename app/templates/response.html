@@ -26,8 +26,7 @@
                       {% for page in pages[:4] %}
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
-                        <span class="story-date">by {{ page[3] }}</span>
-                        <span class="story-date">Created on: {{ page[4] | format_time }}</span>
+                        <span class="story-date">by {{ page[5] }} - Created on: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
                           <li style="list-style-type: none;">No stories yet, try creating or adding onto a story!</li>
@@ -38,8 +37,7 @@
                       {% for page in contributed_pages[:4] %}
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
-                        <span class="story-date">by {{ page[3] }}</span>
-                        <span class="story-date">Contributed on: {{ page[4] | format_time }}</span> <!-- shows what time user contributed -->
+                        <span class="story-date">by {{ page[5] }} - Contributed on: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
                           <li style="list-style-type: none;">No contributions yet, try adding to a story!</li>
@@ -53,8 +51,7 @@
                       {% for page in other_pages[:4] %} <!-- shows only 4 randomized entries -->
                       <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
                         <a href="/add_to_story/{{ page[0] }}">{{ page[1] }}</a>
-                        <span class="story-date">by {{ page[3] }}</span>
-                        <span class="story-date">Last Added: {{ page[4] | format_time }}</span>
+                        <span class="story-date">by {{ page[5] }} - Last Added: {{ page[4] | format_time }}</span>
                       </li>
                       {% else %}
                           <li style="list-style-type: none;">No suggestions available right now.</li> <!-- only gets triggered if no stories in database -->

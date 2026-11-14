@@ -11,10 +11,11 @@
     </head>
     <body>
       <div class="edit-container">
-        <h1 class="edit-heading">Add to this story: {{ page[1] }} by {{ page[3] }}</h1>
+        <h1 class="edit-heading">Add to this story:</h1>
+        <h1 class="edit-heading"> {{ page[1] }} by {{ page[5] }}</h1>
         {% if last_contribution %}
             <div class="existing-story">
-                <p>{{ last_contribution[3] }} by {{ last_contribution[2] }}</p>
+                <p>{{ last_contribution[3] }} by {{ last_contribution[5] }}</p>
             </div>
         {% else %}
             <div class="existing-story">

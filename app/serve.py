@@ -101,21 +101,22 @@ def user_profile(username):
         return "User not found"
     #searches all stories where the user has created them
     try:
-        c.execute("SELECT * FROM pages WHERE creator_id = ?", (user[0],))
+        #combines all oclumns of pages and combines it with username column
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.creator_id = ?", (user[0],))
         pages = c.fetchall()
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
     # Fetch stories where the user has contributed
     try:
-        c.execute("SELECT DISTINCT p.* FROM pages p JOIN contributions c ON p.id = c.page_id WHERE c.contributor_id = ?", (user[0],))
+        c.execute("SELECT DISTINCT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id JOIN contributions c ON p.id = c.page_id WHERE c.contributor_id = ?", (user[0],))
         contributed_pages = c.fetchall()
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
     # Fetch stories that the user has not created or contributed to
     try:
-        c.execute("SELECT * FROM pages WHERE creator_id != ? AND id NOT IN (SELECT page_id FROM contributions WHERE contributor_id = ?)", (user[0], user[0]))
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.creator_id != ? AND p.id NOT IN (SELECT page_id FROM contributions WHERE contributor_id = ?)", (user[0], user[0]))
         other_pages = c.fetchall()
         # Shuffle the list to randomize the order
         random.shuffle(other_pages)
@@ -198,14 +199,14 @@ def add_to_story(id):
         except sqlite3.Error as e:
             return f"Database error: {e}"
         return redirect(url_for("view_page", id=id))
-    
+
     # Fetch the last contribution to the story
     try:
-        c.execute("SELECT * FROM contributions WHERE page_id = ? ORDER BY added_at DESC LIMIT 1", (id,))
+        c.execute("SELECT c.*, u.username FROM contributions c JOIN users u ON c.contributor_id = u.id WHERE c.page_id = ? ORDER BY c.added_at DESC LIMIT 1", (id,))
         last_contribution = c.fetchone()
     except sqlite3.Error as e:
         return f"Database error: {e}"
-    
+
     if last_contribution:
         return render_template("add_to_story.html", page=page, last_contribution=last_contribution, username=username)
     else:
@@ -222,7 +223,7 @@ def view_page(id):
         return "Error 404: Page not found" #not rlly an error ik
 
     try:
-        c.execute("SELECT * FROM contributions WHERE page_id = ?", (id,))
+        c.execute("SELECT c.*, u.username FROM contributions c JOIN users u ON c.contributor_id = u.id WHERE c.page_id = ?", (id,))
         contributions = c.fetchall()
     except sqlite3.Error as e:
         return f"Database error: {e}"

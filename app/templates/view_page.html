@@ -11,14 +11,14 @@
     </head>
     <body>
         <div class="edit-container">
-            <h1 class="edit-heading">{{ page[1] }} by {{ page[3] }}</h1>
+            <h1 class="edit-heading">{{ page[1] }} by {{ page[5] }}</h1>
             <div class="existing-story">
                 <p>{{ page[2] }}</p>
             </div>
             <h3>Contributions:</h3>
             <ul>
                 {% for contribution in contributions %}
-                    <li><strong>{{ contribution[3] }}</strong> by {{ contribution[2] }} - Added on: {{ contribution[4] | format_time }}</li>
+                    <li><strong>{{ contribution[3] }}</strong> by {{ contribution[5] }} - Added on: {{ contribution[4] | format_time }}</li>
                 {% endfor %}
             </ul>
             <a href="/user/{{ session['username'] }}"><button class="btn-cancel btn-large" style="font-size:20px;">Back to Profile</button></a>
