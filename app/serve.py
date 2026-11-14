@@ -169,7 +169,7 @@ def add_to_story(id):
         return f"Database error: {e}"
     if not page:
         return "Error 404: Page not found"
-    if page[3] == username:  # Check if the current user is the author
+    if page[3] == session['user_id']:  # Check if the current user is the author
         return "You cannot add to your own story."
     try: #checks if user alr added onto the story
         c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (id, session['user_id']))
