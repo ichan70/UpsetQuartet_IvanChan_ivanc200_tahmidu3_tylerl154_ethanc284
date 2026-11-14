@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- work in progress -->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="The Error Page For The website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <title>ERROR!</title>
+    </head>
+
+    <body>
+      <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Website Logo" class="login-logo">
+        <div class="title2">
+            <h1>Login Page</h1>
+        </div>
+        <div class="form">
+        	<form action="/login" method="post">
+            	<h4>Username:</h4>
+            	<input type="text" name="username" required>
+            	<h4>Password:</h4>
+            	<input type="password" name="password" required>
+            	<br> <br>
+            	<input type="submit" class="submit submit-blue" value="Login" style="margin-top:-10px; font-size:15px;">
+        	</form>
+        </div>
+        <br> <br> <br> <br>
+        <div class="redirect">
+        	<p>Don't have an account? <a href="/signup">Register here</a></p>
+        </div>
+    </body>
+</html>
