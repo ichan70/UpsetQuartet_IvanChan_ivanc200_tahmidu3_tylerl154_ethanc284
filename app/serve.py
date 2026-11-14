@@ -174,7 +174,7 @@ def add_to_story(id):
         return redirect(url_for("login"))
     username = session['username']
     try: #fetches the page and runs a check to see if matches author
-        c.execute("SELECT * FROM pages WHERE id = ?", (id,))
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.id = ?", (id,))
         page = c.fetchone()
     except sqlite3.Error as e:
         return f"Database error: {e}"
@@ -215,7 +215,7 @@ def add_to_story(id):
 @app.route("/page/<int:id>") #lets you read the story
 def view_page(id):
     try:
-        c.execute("SELECT * FROM pages WHERE id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
         page = c.fetchone()
     except sqlite3.Error as e:
         return f"Database error: {e}" #jic sqlite3 gets fussy
