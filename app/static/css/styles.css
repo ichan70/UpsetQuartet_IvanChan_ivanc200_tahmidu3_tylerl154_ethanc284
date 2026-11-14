@@ -26,6 +26,14 @@ p, h1, h2, h3, h4, a {
 	font-family: 'Inconsolata-Bold';
 	font-size: 36px;
 	text-align: center;
+}
+
+.title2 {
+	display: flex;
+	justify-content: center;
+	font-family: 'Inconsolata-Bold';
+	font-size: 36px;
+	text-align: center;
 	margin-top: -35px;
 }
 
@@ -132,4 +140,10 @@ p, h1, h2, h3, h4, a {
 		max-width: 350px;
     width: 100%;
     height: auto;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
