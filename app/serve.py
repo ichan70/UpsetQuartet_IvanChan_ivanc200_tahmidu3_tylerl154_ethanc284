@@ -19,6 +19,8 @@ c = db.cursor()
 tables.setup()
 
 def format_time(timestamp):
+    if timestamp is None:
+        return "N/A"
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 # Register the format_time function as a template filter

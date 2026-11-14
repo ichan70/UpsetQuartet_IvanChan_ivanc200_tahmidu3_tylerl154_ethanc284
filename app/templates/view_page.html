@@ -26,7 +26,7 @@
             <h2>Contributions</h2>
             <ul>
                 {% for contribution in contributions %}
-                    <li><strong>{{ contribution[3] }}</strong>: {{ contribution[4] }} - Added at: {{ contribution[5] | format_time }}</li>
+                    <li><strong>{{ contribution[3] }}</strong>: - Added on: {{ contribution[4] | format_time }}</li>
                 {% endfor %}
             </ul>
         </div>
