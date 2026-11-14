@@ -10,23 +10,27 @@
         <title>Edit Page</title>
     </head>
     <body>
-        {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
-            <h4>Add onto this story: {{ page[1] }}</h4>
-            <p>{{ page[2] }}</p>
-        {% else %}
-            <h4>Create a new story</h4>
-        {% endif %}
-        <form action="/edit" method="post">
-            {% if not page %}
-                <h4>Title:</h4>
-                <input type="text" name="title" required>
-            {% endif %}
-            <h4>Text:</h4>
-            <textarea name="text" required></textarea> <!-- text box for content, textarea is bigger than the one for title -->
-            <input type="hidden" name="id" value="{{ page[0] if page else '' }}"> <!-- i made it hidden from the user but this create a page id or make it null -->
-            <br> <br>
-            <input type="submit" value="Publish">
-            <a href="/user/{{ username }}">Cancel</a> <!-- i js added a link that brought back to profile page cuz i think its easier than deleting a dummy entry -->
+      <div class="flexBox">
+        <div class="title">
+          <h1>{{ page[1] }}</h1>
+        </div>
+        <form action="/logout" method="get">
+          <input type="submit" class="submit" value="Logout">
         </form>
+      </div>
+      <div class="story-content">
+        <h2>Story Content</h2>
+        <p>{{ page[2] }}</p>
+      </div>
+      <div class="contributions">
+        <h2>Contributions</h2>
+        <ul>
+          {% for contribution in contributions %}
+            <li><strong>{{ contribution[3] }}</strong>: {{ contribution[4] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <a href="/add_to_story/{{ page[0] }}"><button class="submit">Add to Story</button></a>
+      <a href="/user/{{ session['username'] }}"><button class="submit">Back to Profile</button></a>
     </body>
 </html>

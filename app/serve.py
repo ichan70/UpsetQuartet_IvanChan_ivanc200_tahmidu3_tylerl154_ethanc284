@@ -37,6 +37,7 @@ def login():
 
         if user:
             session['username'] = user[1] #makes a session for the user
+            session['user_id'] = user[0]  # Store the user_id in the session
             return redirect(url_for("user_profile", username=user[1])) #redirectts to profile
         else:
             return "Invalid username or password"
@@ -69,6 +70,7 @@ def register():
 
         #makes session and redirects to profile
         session['username'] = username
+        session['user_id'] = c.lastrowid  # Store the user_id in the session
         return redirect(url_for("user_profile", username=username))
 
     return render_template("register.html")
@@ -99,6 +101,7 @@ def user_profile(username):
 @app.route("/logout")
 def logout():
     session.pop('username', None)
+    session.pop('user_id', None)  # Remove the user_id from the session
     return redirect(url_for("login"))
 
 @app.route("/edit", methods=['GET', 'POST']) #i rmbr tyler saying something abt not doing post so i js did both
@@ -136,7 +139,7 @@ def edit():
             except sqlite3.Error as e:
                 return f"Database error: {e}" #jic sqlite3 gets fussy
         return redirect(url_for("user_profile", username=username))
-    return render_template("edit.html", page=page, username=username)
+    return render_template("edit.html", page=page, username=username, user_id=session['user_id'])
 
 @app.route("/add_to_story/<int:id>", methods=['GET', 'POST'])
 def add_to_story(id):
@@ -152,19 +155,19 @@ def add_to_story(id):
         return "Error 404: Page not found"
     if page[3] == username:  # Check if the current user is the author
         return "You cannot add to your own story."
-    #try: #checks if user alr added onto the story
-    #    c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (page_id, page[3]))
-    #    contribution = c.fetchone()
-    #except sqlite3.Error as e:
-    #    return f"Database error: {e}"
-    #if contribution:
-    #    return "You have already added to this story."
+    try: #checks if user alr added onto the story
+        c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (id, session['user_id']))
+        contribution = c.fetchone()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
+    if contribution:
+        return "You have already added to this story."
     if request.method == 'POST': #same thing but with post
         text = request.form.get("text", "").strip()
         try:
             c.execute("SELECT id FROM users WHERE username = ?", (username,))
             user_id = c.fetchone()[0]
-            #c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (page_id, user_id, text, int(time.time())))
+            c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (id, user_id, text, int(time.time())))
             db.commit()
         except sqlite3.Error as e:
             return f"Database error: {e}"
@@ -176,19 +179,18 @@ def view_page(id):
     try:
         c.execute("SELECT * FROM pages WHERE id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
         page = c.fetchone()
-        print(id)  # Ensure this prints the integer id
     except sqlite3.Error as e:
         return f"Database error: {e}" #jic sqlite3 gets fussy
     if not page:
         return "Error 404: Page not found" #not rlly an error ik
 
-    #try:
-    #    c.execute("SELECT * FROM contributions WHERE id = ?", (id,))
-    #    contributions = c.fetchall()
-    #except sqlite3.Error as e:
-    #    return f"Database error: {e}"
+    try:
+        c.execute("SELECT * FROM contributions WHERE page_id = ?", (id,))
+        contributions = c.fetchall()
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
-    return render_template("view_page.html", page=page)
+    return render_template("view_page.html", page=page, contributions=contributions)
 
 @app.route("/index")
 def indexing():
