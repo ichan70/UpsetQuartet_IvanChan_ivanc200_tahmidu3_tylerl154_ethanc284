@@ -5,31 +5,24 @@
         <meta charset="UTF-8">
         <meta name="description" content="The view page for the website.">
         <meta name="author" content="The Upset Quartet">
-        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>View Page</title>
     </head>
     <body>
-        <div class="flexBox">
-            <div class="title">
-                <h2>{{ page[1] }}</h2>
+        <div class="edit-container">
+            <h1 class="edit-heading">{{ page[1] }} by {{ page[3] }}</h1>
+            <div class="existing-story">
+                <p>{{ page[2] }}</p>
             </div>
-            <form action="/logout" method="get">
-                <input type="submit" class="submit submit-blue style=" style="font-size:20px;" value="Logout">
-            </form>
-        </div>
-        <div class="story-content">
-            <p>{{ page[2] }}</p>
-        </div>
-        <div class="contributions">
             <h3>Contributions:</h3>
             <ul>
                 {% for contribution in contributions %}
-                    <li><strong>{{ contribution[3] }}</strong>: - Added on: {{ contribution[4] | format_time }}</li>
+                    <li><strong>{{ contribution[3] }}</strong> by {{ contribution[2] }} - Added on: {{ contribution[4] | format_time }}</li>
                 {% endfor %}
             </ul>
+            <a href="/add_to_story/{{ page[0] }}"><button class="btn-publish" style="font-size:20px;">Add to Story</button></a>
+            <a href="/user/{{ session['username'] }}"><button class="btn-cancel" style="font-size:20px;">Back to Profile</button></a>
         </div>
-        <a href="/add_to_story/{{ page[0] }}"><button class="submit submit-blue" style="font-size:20px;">Add to Story</button></a>
-        <a href="/user/{{ session['username'] }}"><button class="submit submit-grey" style="font-size:20px;">Back to Profile</button></a>
     </body>
 </html>

@@ -5,23 +5,29 @@
         <meta charset="UTF-8">
         <meta name="description" content="The add to story page for the website.">
         <meta name="author" content="The Upset Quartet">
-        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>Add to Story</title>
     </head>
     <body>
-        <h4>Add to this story: {{ page[1] }}</h4>
+      <div class="edit-container">
+        <h1 class="edit-heading">Add to this story: {{ page[1] }} by {{ page[3] }}</h1>
         {% if last_contribution %}
-            <p>{{ last_contribution[3] }}</p>
+            <div class="existing-story">
+                <p>{{ last_contribution[3] }} by {{ last_contribution[2] }}</p>
+            </div>
         {% else %}
-            <p>{{ page[2] }}</p>
+            <div class="existing-story">
+                <p>{{ page[2] }}</p>
+            </div>
         {% endif %}
-        <form action="/add_to_story/{{ page[0] }}" method="post">
-            <h4>Your Text:</h4>
-            <textarea name="text" required></textarea>
-            <br> <br>
-            <input type="submit" value="Add to Story">
-            <a href="/user/{{ username }}">Cancel</a>
+        <form action="/add_to_story/{{ page[0] }}" method="post" class="edit-form">
+          <textarea name="text" class="edit-textarea" placeholder="Enter Your Text" required></textarea>
+          <div class="edit-buttons">
+            <a href="/user/{{ username }}" class="btn-cancel">Cancel</a>
+            <input type="submit" value="Add to Story" class="btn-publish">
+          </div>
         </form>
+      </div>
     </body>
 </html>
