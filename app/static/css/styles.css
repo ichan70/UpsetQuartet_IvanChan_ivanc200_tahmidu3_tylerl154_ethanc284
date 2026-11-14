@@ -25,7 +25,8 @@ p, h1, h2, h3, h4, a {
 	justify-content: center;
 	font-family: 'Inconsolata-Bold';
 	font-size: 36px;
-	text-align: center
+	text-align: center;
+	margin-top: -35px;
 }
 
 .subtitle {
@@ -123,4 +124,12 @@ p, h1, h2, h3, h4, a {
 
 .story-right a {
     text-decoration: none;
+}
+
+.login-logo {
+		display: block;
+		margin: 0 auto;
+		max-width: 350px;
+    width: 100%;
+    height: auto;
 }
