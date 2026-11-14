@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="description" content="The welcome page for the website.">
         <meta name="author" content="The Upset Quartet">
-        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>Welcome Page</title>
     </head>
@@ -20,27 +19,37 @@
         </div>
         <div class="stories">
             <div class="story-left">
-                <h2><u>Your Stories</u></h2>
+                <h2>Your Stories</h2>
                 <h3>Stories you've contributed to already</h3>
-                <ul>
-                    {% for page in pages %}
-                        <li><a href="/page/{{ page[0] }}">{{ page[1] }}</a> - Created at: {{ page[4] | format_time }}</li>
+                <ul> <!-- shows only 4 latest entries --> <!-- loop.cycle is used for the alternating colours -->
+                    {% for page in pages[:4] %}
+                    <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
+                      <a href="/page/{{ page[0] }}">{{ page[1] }}</a>
+                      <span class="story-date">Created at: {{ page[4] | format_time }}</span>
+                    </li>
+                    {% else %}
+                        <li style="list-style-type: none;">No stories yet, try creating or adding onto a story!</li>
                     {% endfor %}
                 </ul>
             </div>
             <div class="story-right">
-                <h2><u>Suggested Contributions</u></h2>
+                <h2>Suggested Contributions</h2>
                 <h3>Stories you might enjoy</h3>
                 <ul>
-                    {% for page in other_pages %}
-                        <li><a href="/add_to_story/{{ page[0] }}">{{ page[1]}}</a> - Created at: {{ page[4] | format_time }}</li>
+                    {% for page in other_pages[:4] %} <!-- shows only 4 randomized entries -->
+                    <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
+                      <a href="/add_to_story/{{ page[0] }}">{{ page[1] }}</a>
+                      <span class="story-date">Last Added: {{ page[4] | format_time }}</span>
+                    </li>
+                    {% else %}
+                        <li style="list-style-type: none;">No suggestions available right now.</li> <!-- only gets triggered if no stories in database -->
                     {% endfor %}
                 </ul>
             </div>
         </div>
         <div class="button-container">
-            <a href="/index"><button class="submit" style="background-color: #666666ff; color:white;">View All Stories</button></a>
-            <a href="/edit"><button class="submit">Create New Story</button></a>
+            <a href="/index" class="submit" style="background-color: #666666; color: white;">View All Stories</a>
+            <a href="/edit" class="submit">Create New Story</a>
         </div>
     </body>
 </html>

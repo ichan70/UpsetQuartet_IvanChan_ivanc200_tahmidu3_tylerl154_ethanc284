@@ -102,36 +102,48 @@ p, h1, h2, h3, h4, a {
 
 .stories {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20%;
-    font-family: 'Inconsolata';
+    gap: 30px;
 }
 
-.stories h2 {
-    font-size: 30px;
-}
-
-.stories h3 {
-    font-style: italic;
-    margin-top: -10px;
-    margin-bottom: 20px;
-}
-
-.story-left {
-    text-align: center;
-}
-
-.story-left a {
-    text-decoration: none;
-}
-
+.story-left,
 .story-right {
-    text-align: center;
+    flex: 1;
+    min-width: 0;
 }
 
-.story-right a {
+.stories ul {
+    padding: 0;
+    margin: 0;
+}
+
+.stories li {
+    list-style-type: none;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid;
+}
+
+.stories li a {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
     text-decoration: none;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.stories li a:hover {
+    text-decoration: underline;
+}
+
+.stories li .story-date {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    color: #eeeeee;
 }
 
 .login-logo {

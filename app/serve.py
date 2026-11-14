@@ -9,6 +9,7 @@ import sqlite3
 import tables
 import time
 from datetime import datetime
+import random
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
@@ -109,6 +110,8 @@ def user_profile(username):
     try:
         c.execute("SELECT * FROM pages WHERE creator_id != ?", (user[0],))
         other_pages = c.fetchall()
+        # Shuffle the list to randomize the order
+        random.shuffle(other_pages)
     except sqlite3.Error as e:
         return f"Database error: {e}"
 
