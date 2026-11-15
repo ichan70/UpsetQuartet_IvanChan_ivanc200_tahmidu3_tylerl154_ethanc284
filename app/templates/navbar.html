@@ -10,20 +10,17 @@
     <div class="nav-actions">
         <!-- Left-most Index / All stories -->
         <a href="{{ url_for('indexing') }}" class="nav-btn" title="All Stories">
-            <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Index" class="nav-icon-placeholder">
-            <span>Index</span>
+            <img src="{{ url_for('static', filename='images/globe.png') }}" alt="Index" class="nav-icon-placeholder">
         </a>
         <!-- Middle Create new story -->
         <a href="{{ url_for('edit') }}" class="nav-btn" title="Create New Story">
-            <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="New Story" class="nav-icon-placeholder">
-            <span>New Story</span>
+            <img src="{{ url_for('static', filename='images/plus.png') }}" alt="New Story" class="nav-icon-placeholder">
         </a>
 
         <!-- Right-most User Profile -->
         {% if session.get('username') %}
         <a href="{{ url_for('user_profile', username=session['username']) }}" class="nav-btn" title="Profile">
-            <img src="{{ url_for('static', filename='images/error.png') }}" alt="Profile" class="nav-icon-placeholder">
-            <span>Profile</span>
+            <img src="{{ url_for('static', filename='images/person.png') }}" alt="Profile" class="nav-icon-placeholder">
         </a>
         {% endif %}
     </div>

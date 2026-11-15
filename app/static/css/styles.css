@@ -351,7 +351,7 @@ p, h1, h2, h3, h4, a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #222222;
+		background-color: #888888;
     padding: 10px 20px;
     border-bottom: 2px solid #444444;
     position: sticky;
@@ -377,19 +377,20 @@ p, h1, h2, h3, h4, a {
     gap: 6px;
     color: white;
     text-decoration: none;
-    background: #444;
+		background: #CFE2F3;
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 14px;
 }
 
 .nav-btn:hover {
-    background: #555;
+	background-color: #D1E4FF;
+	box-shadow: 0 8px 16px rgba(0, 0, 30, 0.4);
 }
 
 .nav-icon-placeholder {
-    width: 20px;
-    height: 20px;
+		width: 30px;
+		height: 30px;
     object-fit: cover;
     border-radius: 50%;
 }
