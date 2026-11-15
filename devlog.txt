@@ -79,10 +79,14 @@ Fixed a bunch of bugs
 Added a method that turnt time into a human readable format
 Adds a new datatable to keep track of contributions
 
-TahmidU -- 2026-11-13 04:48
+TahmidU -- 2026-11-14 04:48
 (Couldn't sleep but needed a distraction so...)
 Added CSS styling for pages on the site
 Updated story entries shown on profle page to also include ones that a user added onto
 Adjusted add_to_story such that only the last contribution is shown
 Adds team logo to login page
 Fixed a bug that allowed author to append to story after publication
+
+IvanC -- 2026-11-14 13:50
+Fixed CSS styling for certain pages on the site
+Implemented indexing and made styling consistent with other pages
