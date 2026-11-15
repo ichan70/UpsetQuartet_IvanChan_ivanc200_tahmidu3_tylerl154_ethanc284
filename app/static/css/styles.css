@@ -346,3 +346,50 @@ p, h1, h2, h3, h4, a {
     border: 1px solid #999999;
     background-color: #333333;
 }
+
+.global-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222222;
+    padding: 10px 20px;
+    border-bottom: 2px solid #444444;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-search-input {
+    padding: 6px 12px;
+    font-size: 14px;
+    width: 250px;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    text-decoration: none;
+    background: #444;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.nav-btn:hover {
+    background: #555;
+}
+
+.nav-icon-placeholder {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 50%;
+}

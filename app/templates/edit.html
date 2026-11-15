@@ -10,6 +10,7 @@
         <title>Edit Page</title>
     </head>
     <body>
+      {% include 'navbar.html' %}
       <div class="edit-container">
         {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
               <h1 class = "edit-heading">Add onto this story: {{ page[1] }}</h1>
