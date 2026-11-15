@@ -7,6 +7,9 @@ import os
 from flask import Flask, render_template, request, url_for, redirect, session
 import sqlite3
 import tables
+import time
+from datetime import datetime
+import random
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
@@ -15,6 +18,14 @@ DB_FILE = "database.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
 c = db.cursor()
 tables.setup()
+
+def format_time(timestamp):
+    if timestamp is None:
+        return "N/A"
+    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+# Register the format_time function as a template filter
+app.jinja_env.filters['format_time'] = format_time
 
 @app.route("/")
 def root():
@@ -32,13 +43,14 @@ def login():
             c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
             user = c.fetchone()
         except sqlite3.Error as e:
-            return f"Database error: {e}"
+            return render_template("error.html",error_message=f"Database error: {e}")
 
         if user:
             session['username'] = user[1] #makes a session for the user
+            session['user_id'] = user[0]  # Store the user_id in the session
             return redirect(url_for("user_profile", username=user[1])) #redirectts to profile
         else:
-            return "Invalid username or password"
+            return render_template("error.html",error_message="Incorrect Username or Password")
 
     return render_template("login.html")
 
@@ -55,24 +67,25 @@ def register():
         try:
             c.execute("SELECT * FROM users WHERE username = ?", (username,))
             if c.fetchone():
-                return "Username already taken"
+                return render_template("error.html",error_message="Username already taken")
         except sqlite3.Error as e:
-            return f"Database error: {e}"
+            return render_template("error.html",error_message=f"Database error: {e}")
 
         #adds to database
         try:
             c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
             db.commit()
         except sqlite3.Error as e:
-            return f"Database error: {e}"
+            return render_template("error.html",error_message=f"Database error: {e}")
 
         #makes session and redirects to profile
         session['username'] = username
+        session['user_id'] = c.lastrowid  # Store the user_id in the session
         return redirect(url_for("user_profile", username=username))
 
     return render_template("register.html")
 
-@app.route("/user/<username>")
+@app.route("/user/<username>") #new function for viewing the stories
 def user_profile(username):
     #check if no session exists for user or wrong session
     if 'username' not in session or session['username'] != username:
@@ -82,35 +95,180 @@ def user_profile(username):
         c.execute("SELECT * FROM users WHERE username = ?", (username,))
         user = c.fetchone()
     except sqlite3.Error as e:
-        return f"Database error: {e}"
+        return render_template("error.html",error_message=f"Database error: {e}")
 
     if not user:
-        return "User not found"
+        return render_template("error.html",error_message="User not found")
     #searches all stories where the user has created them
     try:
-        c.execute("SELECT * FROM pages WHERE creator_id = ?", (user[0],))
+        #combines all oclumns of pages and combines it with username column
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.creator_id = ?", (user[0],))
         pages = c.fetchall()
     except sqlite3.Error as e:
-        return f"Database error: {e}"
+        return render_template("error.html",error_message=f"Database error: {e}")
 
-    return render_template("response.html", username=username, pages=pages)
+    # Fetch stories where the user has contributed
+    try:
+        c.execute("SELECT DISTINCT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id JOIN contributions c ON p.id = c.page_id WHERE c.contributor_id = ?", (user[0],))
+        contributed_pages = c.fetchall()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+
+    # Fetch stories that the user has not created or contributed to
+    try:
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.creator_id != ? AND p.id NOT IN (SELECT page_id FROM contributions WHERE contributor_id = ?)", (user[0], user[0]))
+        other_pages = c.fetchall()
+        # Shuffle the list to randomize the order
+        random.shuffle(other_pages)
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+
+    return render_template("response.html", username=username, pages=pages, contributed_pages=contributed_pages, other_pages=other_pages)
 
 @app.route("/logout")
 def logout():
     session.pop('username', None)
+    session.pop('user_id', None)  # Remove the user_id from the session
     return redirect(url_for("login"))
 
-@app.route("/edit")
+@app.route("/edit", methods=['GET', 'POST']) #i rmbr tyler saying something abt not doing post so i js did both
 def edit():
-	if 'username' not in session or session['username'] != username:
-		return redirect(url_for("login"))
-	return render_template("edit.html")
-	
+    if 'username' not in session: #check to make sure it's an existing username
+        return redirect(url_for("login"))
+    username = session['username']
+    page_id = request.args.get('id') #grabs page id from edit.html template
+    if page_id:
+        try:
+            c.execute("SELECT * FROM pages WHERE id = ?", (page_id,)) #grabs page_id from the database
+            page = c.fetchone()
+        except sqlite3.Error as e: #exception jic sqlite3 throws an error
+            return render_template("error.html",error_message=f"Database error: {e}")
+        if not page:
+            return render_template("error.html",error_message="Error 404: Page not found") #simple jic page doesn't exist
+    else:
+        page = None
+    if request.method == 'POST': #same thing but if its post
+        title = request.form.get("title", "").strip()
+        text = request.form.get("text", "").strip()
+        page_id = request.form.get("id", "").strip()
+        if page_id:
+            try:
+                c.execute("UPDATE pages SET text = ? WHERE id = ?", (text, page_id)) #code for adding content
+                db.commit()
+            except sqlite3.Error as e:
+                return render_template("error.html",error_message=f"Database error: {e}")
+        else:
+            try:
+                c.execute("SELECT id FROM users WHERE username = ?", (username,))
+                user_id = c.fetchone()[0] #code for creating content
+                c.execute("INSERT INTO pages (title, text, creator_id, created_at) VALUES (?, ?, ?, ?)", (title, text, user_id, int(time.time())))
+                db.commit()
+            except sqlite3.Error as e:
+                return render_template("error.html",error_message=f"Database error: {e}") #jic sqlite3 gets fussy
+        return redirect(url_for("user_profile", username=username))
+    return render_template("edit.html", page=page, username=username, user_id=session['user_id'])
+
+@app.route("/add_to_story/<int:id>", methods=['GET', 'POST'])
+def add_to_story(id):
+    if 'username' not in session: #checks if user exists
+        return redirect(url_for("login"))
+    username = session['username']
+    try: #fetches the page and runs a check to see if matches author
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.id = ?", (id,))
+        page = c.fetchone()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+    if not page:
+        return "Error 404: Page not found"
+    if page[3] == session['user_id']:  # Check if the current user is the author
+        return render_template("error.html", error_message="You can't add to your own story.")
+    try: #checks if user alr added onto the story
+        c.execute("SELECT * FROM contributions WHERE page_id = ? AND contributor_id = ?", (id, session['user_id']))
+        contribution = c.fetchone()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+    if contribution:
+        return render_template("error.html",error_message="You have already added to this story.")
+    if request.method == 'POST': #same thing but with post
+        text = request.form.get("text", "").strip()
+        try:
+            c.execute("SELECT id FROM users WHERE username = ?", (username,))
+            user_id = c.fetchone()[0]
+            c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (id, user_id, text, int(time.time())))
+            db.commit()
+        except sqlite3.Error as e:
+            return render_template("error.html",error_message=f"Database error: {e}")
+        return redirect(url_for("view_page", id=id))
+
+    # Fetch the last contribution to the story
+    try:
+        c.execute("SELECT c.*, u.username FROM contributions c JOIN users u ON c.contributor_id = u.id WHERE c.page_id = ? ORDER BY c.added_at DESC LIMIT 1", (id,))
+        last_contribution = c.fetchone()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+
+    if last_contribution:
+        return render_template("add_to_story.html", page=page, last_contribution=last_contribution, username=username)
+    else:
+        return render_template("add_to_story.html", page=page, username=username)
+
+@app.route("/page/<int:id>") #lets you read the story
+def view_page(id):
+    try:
+        c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
+        page = c.fetchone()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}") #jic sqlite3 gets fussy
+    if not page:
+        return render_template("error.html",error_message="Error 404: Page not found") #not rlly an error ik
+
+    try:
+        c.execute("SELECT c.*, u.username FROM contributions c JOIN users u ON c.contributor_id = u.id WHERE c.page_id = ?", (id,))
+        contributions = c.fetchall()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+
+    return render_template("view_page.html", page=page, contributions=contributions)
+
+@app.route("/error")
+def testError():
+    return render_template("error.html", error_message="this is a test error")
+
 @app.route("/index")
 def indexing():
-	if 'username' not in session or session['username'] != username:
-		return redirect(url_for("login"))
-	return render_template("index.html")
+    # Check if user is logged in
+    if 'username' not in session:
+        return redirect(url_for("login"))
+    username = session['username']
+    search = request.args.get('query', '').strip()
+    # Handle pagination
+    try:
+        page = int(request.args.get('page', 1))
+        if page < 1:
+            page = 1
+    except (ValueError, TypeError):
+        page = 1
+    per_page = 20
+    current = (page - 1) * per_page
+    try:
+        if search:
+            # Grab pages that match the search query
+            like_query = f"%{search}%"
+            c.execute("SELECT COUNT(*) FROM pages WHERE title LIKE ?",(like_query,))
+            total_count = c.fetchone()[0]
+            c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.title LIKE ? ORDER BY p.created_at DESC LIMIT ? OFFSET ?", (like_query, per_page, current))
+            pages = c.fetchall()
+        else:
+            # Get every page
+            c.execute("SELECT COUNT(*) FROM pages")
+            total_count = c.fetchone()[0]
+            c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?", (per_page, current))
+            pages = c.fetchall()
+    except sqlite3.Error as e:
+        return render_template("error.html",error_message=f"Database error: {e}")
+    total_pages = (total_count + per_page - 1) // per_page
+    return render_template("index.html",username=username,pages=pages,search=search,current_page=page,total_pages=total_pages)
+
 
 if __name__ == "__main__":
     app.debug = True

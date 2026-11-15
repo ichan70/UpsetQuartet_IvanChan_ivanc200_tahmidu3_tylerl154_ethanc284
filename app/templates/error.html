@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- work in progress -->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="The Error Page For The website.">
+        <meta name="author" content="The Upset Quartet">
+        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <title>ERROR!</title>
+    </head>
+
+    <body>
+      {% include 'navbar.html' %}
+      <img src="{{ url_for('static', filename='images/error.png') }}" alt="Dizzy Guy" class="login-logo"> <!-- using login logo class cuz im lazy -->
+        <div class="title2">
+            <h1>{{ error_message }}</h1>
+        </div>
+        <div class = button-container>
+          <a href="{% if session.get('username') %}/user/{{ session.get('username') }}{% else %}/login{% endif %}" class="btn-cancel btn-large" style="background-color: #CFE2F3; color: #222222;">Take Me Back!!!</a>
+        </div>
+    </body>
+</html>
