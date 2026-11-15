@@ -377,14 +377,14 @@ p, h1, h2, h3, h4, a {
     gap: 6px;
     color: white;
     text-decoration: none;
-		background: #CFE2F3;
+		background: #666666;
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 14px;
 }
 
 .nav-btn:hover {
-	background-color: #D1E4FF;
+	background-color: #777777;
 	box-shadow: 0 8px 16px rgba(0, 0, 30, 0.4);
 }
 
