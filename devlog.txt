@@ -90,3 +90,11 @@ Fixed a bug that allowed author to append to story after publication
 IvanC -- 2026-11-14 13:50
 Fixed CSS styling for certain pages on the site
 Implemented indexing and made styling consistent with other pages
+
+TahmidU -- 2026-11-14 23:20
+(Summary of entire day)
+Added additional CSS styling for other pages on the site
+Adds an error page
+adds a navbar
+made some pixel art for the error thingy
+fixed identation bugs in index
