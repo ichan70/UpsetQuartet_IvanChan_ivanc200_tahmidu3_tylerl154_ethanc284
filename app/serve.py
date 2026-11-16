@@ -35,61 +35,70 @@ def root():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password")
-        #checks if passwords match by searching the database for the pair
-        try: #exceptions maybe fix it?
-            c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
-            user = c.fetchone()
-        except sqlite3.Error as e:
-            return render_template("error.html",error_message=f"Database error: {e}")
+	if 'username' in session:
+		return redirect(url_for('user_profile', username=session['username']))
 
-        if user:
-            session['username'] = user[1] #makes a session for the user
-            session['user_id'] = user[0]  # Store the user_id in the session
-            return redirect(url_for("user_profile", username=user[1])) #redirectts to profile
-        else:
-            return render_template("error.html",error_message="Incorrect Username or Password")
+	if request.method == 'POST':
+		username = request.form.get("username", "").strip()
+		password = request.form.get("password")
+		#checks if passwords match by searching the database for the pair
+		try: #exceptions maybe fix it?
+			c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+			user = c.fetchone()
+		except sqlite3.Error as e:
+			return render_template("error.html",error_message=f"Database error: {e}")
 
-    return render_template("login.html")
+		if user:
+			session['username'] = user[1] #makes a session for the user
+			session['user_id'] = user[0]  # Store the user_id in the session
+			return redirect(url_for("user_profile", username=user[1])) #redirectts to profile
+		else:
+			return render_template("error.html",error_message="Incorrect Username or Password")
+
+	return render_template("login.html")
 
 @app.route("/signup", methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password")
-        otherPassword = request.form.get("otherPassword")
+	if 'username' in session:
+		return redirect(url_for('user_profile', username=session['username']))
 
-        if password != otherPassword: #check for passwords matching
-            return render_template("error.html",error_message="Passwords do not match")
-        #check if username already exists
-        try:
-            c.execute("SELECT * FROM users WHERE username = ?", (username,))
-            if c.fetchone():
-                return render_template("error.html",error_message="Username already taken")
-        except sqlite3.Error as e:
-            return render_template("error.html",error_message=f"Database error: {e}")
+	if request.method == 'POST':
+		username = request.form.get("username", "").strip()
+		password = request.form.get("password")
+		otherPassword = request.form.get("otherPassword")
 
-        #adds to database
-        try:
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-            db.commit()
-        except sqlite3.Error as e:
-            return render_template("error.html",error_message=f"Database error: {e}")
+		if password != otherPassword: #check for passwords matching
+			return render_template("error.html",error_message="Passwords do not match")
+		#check if username already exists
+		try:
+			c.execute("SELECT * FROM users WHERE username = ?", (username,))
+			if c.fetchone():
+				return render_template("error.html",error_message="Username already taken")
+		except sqlite3.Error as e:
+			return render_template("error.html",error_message=f"Database error: {e}")
 
-        #makes session and redirects to profile
-        session['username'] = username
-        session['user_id'] = c.lastrowid  # Store the user_id in the session
-        return redirect(url_for("user_profile", username=username))
+		#adds to database
+		try:
+			c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+			db.commit()
+		except sqlite3.Error as e:
+			return render_template("error.html",error_message=f"Database error: {e}")
 
-    return render_template("register.html")
+		#makes session and redirects to profile
+		session['username'] = username
+		session['user_id'] = c.lastrowid  # Store the user_id in the session
+		return redirect(url_for("user_profile", username=username))
+
+	return render_template("register.html")
 
 @app.route("/user/<username>") #new function for viewing the stories
 def user_profile(username):
     #check if no session exists for user or wrong session
-    if 'username' not in session or session['username'] != username:
+    if 'username' not in session:        
         return redirect(url_for("login"))
+        
+    if session['username'] != username:
+    	return redirect(url_for("user_profile", username=session['username']))
 
     try:
         c.execute("SELECT * FROM users WHERE username = ?", (username,))
