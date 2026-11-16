@@ -3,6 +3,7 @@ import os
 import time
 import re
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def setup():
     DB_FILE = "database.db"
     db = sqlite3.connect(DB_FILE)
@@ -31,7 +32,7 @@ def setup():
         user_id_upset_quartet_but_cooler = user_id_upset_quartet_but_cooler[0]
 
     # Insert stories into the database if they haven't been inserted already
-    story_dir = "stories"
+    story_dir = os.path.join(BASE_DIR, "stories")
     for filename in os.listdir(story_dir):
         if filename.endswith(".txt"):
             with open(os.path.join(story_dir, filename), 'r') as file:
@@ -47,16 +48,6 @@ def setup():
                     else:
                         story_content = ""
                     insert_story(c, title, story_content, user_id_upset_quartet, created_at)
-
-    # Insert a contribution from "UpsetQuartetButCooler" for "story_2.txt"
-    c.execute("SELECT id FROM pages WHERE title = 'Comedy Story Example'")
-    page_id_story_2 = c.fetchone()
-    if page_id_story_2:
-        page_id_story_2 = page_id_story_2[0]
-        contribution_text = "Later on, when eating breakfast, he ordered his go-to coffee, but realized with every sip, he grew more tired. What could possibly be happening!?"
-        contrib_time = created_at if 'created_at' in locals() and created_at else int(time.time())
-        c.execute("INSERT INTO contributions (page_id, contributor_id, text, added_at) VALUES (?, ?, ?, ?)", (page_id_story_2, user_id_upset_quartet_but_cooler, contribution_text, contrib_time))
-
     db.commit()
     db.close()
 
