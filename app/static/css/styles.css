@@ -351,7 +351,7 @@ p, h1, h2, h3, h4, a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-		background-color: #888888;
+	background-color: #888888;
     padding: 10px 20px;
     border-bottom: 2px solid #444444;
     position: sticky;
@@ -377,7 +377,7 @@ p, h1, h2, h3, h4, a {
     gap: 6px;
     color: white;
     text-decoration: none;
-		background: #666666;
+	background: #666666;
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 14px;
@@ -389,8 +389,19 @@ p, h1, h2, h3, h4, a {
 }
 
 .nav-icon-placeholder {
-		width: 30px;
-		height: 30px;
+	width: 30px;
+	height: 30px;
     object-fit: cover;
     border-radius: 50%;
+}
+
+.dropzone {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 40px;
+	gap: 20px;
+	margin-bottom: 80px;
+	font-family: 'Inconsolata';
+	color: white;
 }

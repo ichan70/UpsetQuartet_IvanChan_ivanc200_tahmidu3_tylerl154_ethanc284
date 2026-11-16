@@ -4,7 +4,7 @@
 # 2026-11-18
 
 import os
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, make_response
 import sqlite3
 import tables
 import time
@@ -269,6 +269,41 @@ def indexing():
     total_pages = (total_count + per_page - 1) // per_page
     return render_template("index.html",username=username,pages=pages,search=search,current_page=page,total_pages=total_pages)
 
+@app.route("/export/<int:id>") #lets you export the story
+def export_page(id):
+	# copied code from view page
+	if 'username' not in session:
+		return redirect(url_for("login"))
+
+	try:
+		c.execute("SELECT p.*, u.username FROM pages p JOIN users u ON p.creator_id = u.id WHERE p.id = ?", (id,)) #grabs the content based on the page_id of the story (note to self: ask tyler if each page_id is unique)
+		page = c.fetchone()
+	except sqlite3.Error as e:
+		return render_template("error.html",error_message=f"Database error: {e}") #jic sqlite3 gets fussy
+	if not page:
+		return render_template("error.html",error_message="Error 404: Page not found") #not rlly an error ik
+
+	try:
+		c.execute("SELECT c.*, u.username FROM contributions c JOIN users u ON c.contributor_id = u.id WHERE c.page_id = ?", (id,))
+		contributions = c.fetchall()
+	except sqlite3.Error as e:
+		return render_template("error.html",error_message=f"Database error: {e}")
+	
+	export = f"Title: {page[1]}\nAuthor: {page[5]}\nCreated At: {format_time(page[4])}\n\n{page[2]}\n\n"
+
+	if contributions:
+		export += "Contributions:\n"
+		for cb in contributions:
+			export += f"By {cb[5]} on {format_time(cb[4])}:\n{cb[3]}\n\n"
+    
+    # what this does is that it uses the make_response function imported by Flask to 
+    # attach headers to it. content-disposition is to download the file instead of
+    # displaying a page, while content-type is to tell what charset it is (which is 
+    # the same as the header put in the html)
+	response = make_response(export)
+	response.headers["Content-Disposition"] = f"attachment; filename=story_{id}.txt"
+	response.headers["Content-Type"] = "text/plain; charset=utf-8"
+	return response
 
 if __name__ == "__main__":
     app.debug = True
