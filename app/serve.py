@@ -62,7 +62,7 @@ def register():
         otherPassword = request.form.get("otherPassword")
 
         if password != otherPassword: #check for passwords matching
-            return "Passwords do not match"
+            return render_template("error.html",error_message="Passwords do not match")
         #check if username already exists
         try:
             c.execute("SELECT * FROM users WHERE username = ?", (username,))
