@@ -107,3 +107,6 @@ Fixed minor redirecting issues.
 
 TahmidU -- 2026-11-15 23:51
 Spent 2 hours trying to get the demo stuff working
+
+EthanC -- 2026-11-16 00:27
+Revised design document for readability
