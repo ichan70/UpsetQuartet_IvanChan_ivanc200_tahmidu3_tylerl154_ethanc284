@@ -103,3 +103,4 @@ IvanC -- 2026-11-15 7:16
 Tried to implementing exporting and importing, realized importing was too hard
 Implemented exporting, minor CSS changes
 SHOULD have fixed design pdfs.
+Fixed minor redirecting issues.
