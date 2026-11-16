@@ -315,5 +315,5 @@ def export_page(id):
 	return response
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     app.run()
