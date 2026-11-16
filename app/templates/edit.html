@@ -10,6 +10,7 @@
         <title>Edit Page</title>
     </head>
     <body>
+    	<!-- Inconsistent spacing due to multiple people's work not having the same indentiation level. -->
       {% include 'navbar.html' %}
       <div class="edit-container">
         {% if page %} <!-- if-else check that either adds onto a story or creates a new story (jinja is weird af needing these percent signs idk man) -->
@@ -29,6 +30,6 @@
             <input type="submit" value="Publish" class="btn-publish">
           </div>
         </form>
-      </div>
+    </div>
     </body>
 </html>
