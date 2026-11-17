@@ -135,3 +135,12 @@ A: No.
 
 Q: Which features need/deserve more airtime during demo?
 A: Home page, all stories page, search bar
+
+EthanC -- 2026-11-17 14:46
+Made demo script:
+  -login/register (show that signup/login mistakes fail gracefully)
+  -profile page
+  -all stories page
+    -one story (view, edit, publish functionalities)
+  -create story
+  -security
