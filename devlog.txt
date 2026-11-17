@@ -115,3 +115,23 @@ EthanC -- 2026-11-16 14:43
 Pushed updated design doc pdf
 Website finished?
 Started practicing demo
+
+EthanC -- 2026-11-17 14:23
+HOME STRETCH
+Q: How familiar is each teammate with entirety of codebase?
+A: Moderately familiar. We are continuing to familiarize everyone.
+
+Q: Does it work?
+A: Yes.
+
+Q: Does it fail gracefully?
+A: Yes.
+
+Q: Can you predict Q/C/C at demotime?
+A: Yes. 
+
+Q: Features cut?
+A: No.
+
+Q: Which features need/deserve more airtime during demo?
+A: Home page, all stories page, search bar
