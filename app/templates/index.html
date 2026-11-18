@@ -5,11 +5,39 @@
         <meta charset="UTF-8">
         <meta name="description" content="The index page for the website.">
         <meta name="author" content="The Upset Quartet">
-        <meta name="viewport" content="width=device.width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>Index Page</title>
     </head>
     <body>
-    	<h4> There's no content, but you can view every story here. </h4>
+      {% include 'navbar.html' %}
+        <div class="title" style="text-decoration: underline white;">
+            <h1>All Stories</h1>
+        </div>
+
+        <div class="stories" id="stories-column">
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li style="background-color: {{ loop.cycle('#666666', '#999999') }}; border-color: {{ loop.cycle('#999999', '#666666') }}; color: white;">
+                            <a href="{{ url_for('view_page', id=page[0]) }}"><strong>{{ page[1] }}</strong></a>
+                            <span class="story-date">by {{ page[5] }} - Created on: {{ page[4] | format_time }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="text-align: center;">No stories found. Maybe try creating one!</p>
+            {% endif %}
+
+            <div class="flexBox2">
+                {% if current_page > 1 %}
+                    <a href="{{ url_for('indexing', page=current_page-1, query=search) }}" class="submit submit-grey" id="small">Previous</a>
+                {% endif %}
+                {% if current_page < total_pages %}
+                    <a href="{{ url_for('indexing', page=current_page+1, query=search) }}" class="submit submit-blue" id="small">Next</a>
+                {% endif %}
+                <span id="small">Page {{ current_page }} of {{ total_pages if total_pages > 0 else 1 }}</span>
+            </div>
+        </div>
     </body>
 </html>

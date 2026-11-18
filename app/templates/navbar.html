@@ -1,0 +1,27 @@
+<nav class="global-navbar">
+    <!-- Left: searchbar -->
+    <div class="nav-search">
+        <form method="GET" action="{{ url_for('indexing') }}">
+            <input type="text" name="query" value="{{ search|default('') }}" placeholder="Search stories..." class="edit-input nav-search-input">
+        </form>
+    </div>
+
+    <!-- Right -->
+    <div class="nav-actions">
+        <!-- Left-most Index / All stories -->
+        <a href="{{ url_for('indexing') }}" class="nav-btn" title="All Stories">
+            <img src="{{ url_for('static', filename='images/globe.png') }}" alt="Index" class="nav-icon-placeholder">
+        </a>
+        <!-- Middle Create new story -->
+        <a href="{{ url_for('edit') }}" class="nav-btn" title="Create New Story">
+            <img src="{{ url_for('static', filename='images/plus.png') }}" alt="New Story" class="nav-icon-placeholder">
+        </a>
+
+        <!-- Right-most User Profile -->
+        {% if session.get('username') %}
+        <a href="{{ url_for('user_profile', username=session['username']) }}" class="nav-btn" title="Profile">
+            <img src="{{ url_for('static', filename='images/person.png') }}" alt="Profile" class="nav-icon-placeholder">
+        </a>
+        {% endif %}
+    </div>
+</nav>
