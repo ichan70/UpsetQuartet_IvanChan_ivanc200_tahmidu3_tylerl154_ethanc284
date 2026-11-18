@@ -9,4 +9,3 @@ Flask
 requests
 gunicorn
 python-dotenv
-tables

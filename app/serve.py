@@ -6,7 +6,7 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect, session, make_response
 import sqlite3
-from app import tables
+import tables
 import time
 from datetime import datetime
 import random
