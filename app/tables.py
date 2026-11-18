@@ -5,7 +5,7 @@ import re
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def setup():
-    DB_FILE = "database.db"
+    DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.db")
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)")

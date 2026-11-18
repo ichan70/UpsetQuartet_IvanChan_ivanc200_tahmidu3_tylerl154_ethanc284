@@ -14,7 +14,7 @@ import random
 app = Flask(__name__)
 app.secret_key = os.urandom(32)  # Generates a random secret key
 
-DB_FILE = "database.db"
+DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.db")
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
 c = db.cursor()
 tables.setup()

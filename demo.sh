@@ -2,7 +2,7 @@ echo "Demo Time!"
 # downloads precompiled binaries of cloudflared
 curl -L --output cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
 #sets execute permission
-chmod +x cloudflared
+chmod 777 cloudflared
 #runs flask app (MAKE SURE VENV IS ENABLED)
 echo "starting flask app"
 python3 app/serve.py > flask.log 2>&1 & FLASK_PID=$!
