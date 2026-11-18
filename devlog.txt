@@ -144,3 +144,6 @@ Made demo script:
     -one story (view, edit, publish functionalities)
   -create story
   -security
+
+IvanC -- 2026-11-18 00:01
+Added more stories in preperation for presentation
