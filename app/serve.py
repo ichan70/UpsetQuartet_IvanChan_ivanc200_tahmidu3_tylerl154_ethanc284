@@ -6,7 +6,6 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect, session, make_response
 import sqlite3
-import tables
 import time
 from datetime import datetime
 import random
@@ -17,7 +16,6 @@ app.secret_key = os.urandom(32)  # Generates a random secret key
 DB_FILE = "database.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #idk maybe fixes the thread stuff
 c = db.cursor()
-tables.setup()
 
 def format_time(timestamp):
     if timestamp is None:
